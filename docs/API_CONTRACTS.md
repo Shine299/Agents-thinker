@@ -125,7 +125,7 @@ Este es el único acuerdo que A (extensión) y B (agente) necesitan para trabaja
 
 ## Reglas no negociables del contrato
 
-- Timeout de `/agent/turn`: **8 segundos**.
+- Timeout de `/agent/turn`: **20 segundos** (era 8, calibrado sobre el stub; el caso de demo de 10 campos con modelo real tarda 7.6–8.3s — solo cambió el valor, no la forma).
 - `page.elements` no pasa de 150 entradas ni de 6 KB serializados.
 - El indexado **excluye todo `input[type="password"]`**.
 - Ninguna acción con `needs_approval: true` se ejecuta sin clic del usuario. No hay "modo automático".

@@ -30,6 +30,9 @@ Gerente General - GRUPO ANDINO SAC
 ---
 Notas para el caso de demo (no forman parte del correo, uso interno del equipo):
 - Dato verificable via Exa (Sprint-02, verify_entity): existencia real de "GRUPO ANDINO SAC" / RUC 20456789123.
+  Verificado con clave real (2026-09-12): el RUC es ficticio y Exa devuelve "EXPORT IMPORT & GRUPO ANDINO SAC -
+  20539177398". Se mantiene a proposito: el agente propone el RUC del correo y anota la discrepancia en el
+  `reason` — mostrar ese momento en el video (verifica, avisa, y la decision sigue siendo del humano).
 - Dato que requiere transformacion (Sprint-02): "vencio el 31 de agosto" -> no hay campo de fecha en el
   formulario; se espera que el agente lo incorpore en el campo "Detalle de la solicitud", no que invente un
   campo nuevo.

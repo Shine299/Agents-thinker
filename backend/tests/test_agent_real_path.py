@@ -149,3 +149,34 @@ def test_openai_wins_when_both_keys_are_present(monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-test")
 
     assert configure_model_client() == "openai"
+
+
+def test_read_page_tool_shows_the_model_every_ref_and_label():
+    """Found with the real key (Sprint-02 close): the tool answered
+    "4 elements available" and the model invented refs like `contact_name`.
+    The model can only cite refs it has actually been shown.
+    """
+    ctx = TurnContext(page=make_page(), locale="es")
+    read_page_tool, _, _ = build_agent_tools(ctx, get_session("s_read_page_tool"))
+
+    shown = read_page_tool()
+
+    for element in make_page().elements:
+        assert element.ref in shown
+        assert element.label in shown
+
+
+def test_turn_input_carries_the_page_index_and_the_user_message():
+    """With the real key the model skipped read_page and proposed invented refs
+    on its first call. The index must be in the turn input from the start —
+    the system prompt already promises "the page.elements index you are given".
+    """
+    from agent import build_turn_input
+
+    ctx = TurnContext(page=make_page(), locale="es")
+    text = build_turn_input(ctx, "Solicitud de Juan Perez Quispe")
+
+    assert "Solicitud de Juan Perez Quispe" in text
+    for element in make_page().elements:
+        assert element.ref in text
+        assert element.label in text

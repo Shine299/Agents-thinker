@@ -7,12 +7,18 @@ status "error" with a readable message, never a stack trace).
 """
 
 import asyncio
+from pathlib import Path
 
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from agent import error_response, run_turn
 from contracts import TurnRequest, TurnResponse
+
+# Keys live in backend/.env (see .env.example). Resolved next to this file so
+# it works no matter where uvicorn is launched from.
+load_dotenv(Path(__file__).with_name(".env"))
 
 app = FastAPI(title="Ventana backend")
 
@@ -24,7 +30,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-TURN_TIMEOUT_SECONDS = 8
+# 8s was calibrated on the stub; the real model needs ~8s for the 10-field demo
+# case (11 tool calls). 20s keeps headroom without letting a hung call wait forever.
+TURN_TIMEOUT_SECONDS = 20
 
 
 @app.get("/health")

@@ -19,10 +19,11 @@ yet resolved (approved, discarded, or exhausted), so approving 1 of 3 fields
 never reports "done" while 2 are still waiting.
 """
 
+import json
 import os
 import re
 
-from contracts import TraceStep, TurnRequest, TurnResponse
+from contracts import Page, TraceStep, TurnRequest, TurnResponse
 from session_store import ProposedField, SessionState, get_session
 from tools import (
     RefNotFoundError,
@@ -36,15 +37,24 @@ from tools import (
 
 SYSTEM_PROMPT = """You operate ONLY on the page.elements index you are given — never on raw HTML.
 For each field you can confidently fill from the user's message, call fill_field with the element's
-ref and a proposed value, and a reason that cites the field's exact label. Never invent a field that
-is not in the index. Never call any "submit" tool — it does not exist.
+ref (exactly as it appears in the index, e.g. "e3") and a proposed value, and a reason that cites the
+field's exact label. Never invent a field or a ref that is not in the index. Never call any "submit"
+tool — it does not exist.
 
-If the message names a company or a tax id (RUC) that should be validated before filling the related
-field, call verify_entity with that value first, and only then call fill_field for the field it
-supports — verify_entity must appear before the fill_field it justifies.
+If the message names a company or a tax id (RUC), call verify_entity ONCE with just that company
+name and/or RUC (not the whole message) before proposing the related fields — verify_entity must
+appear before the fill_field it justifies. The result is informational, not a veto: always propose
+the values the user gave, and put what the lookup found (a match, a different RUC, nothing) into the
+reason so the person can judge before approving. Do not ask the user to confirm first.
 
-Respond in the language given by the locale stated below:
-"es" -> Spanish, "en" -> English. Never mix languages inside one reply.
+Be fast: issue all the fill_field calls for a page together in a single batch, not one per round.
+
+fill_field only PROPOSES a value; nothing is written until the user approves each proposal in the
+panel. Your final reply must say what you propose and that it awaits their approval — never claim
+that fields were filled.
+
+Respond in the language given by the locale stated below, no matter what language the user's
+message or the page is in: "es" -> Spanish, "en" -> English. Never mix languages inside one reply.
 This applies to your reply and to every reason you pass to fill_field.
 
 Never translate: field labels (quote them verbatim, in the portal's original language), ref
@@ -264,14 +274,30 @@ def _status_for(ctx: TurnContext, session: SessionState) -> str:
     return "awaiting_approval" if (ctx.actions or session.proposed) else "done"
 
 
+def _index_json(page: Page) -> str:
+    # The model can only cite refs it has been shown. Null/false keys are
+    # dropped: same information, fewer tokens.
+    return json.dumps(
+        [e.model_dump(exclude_none=True, exclude_defaults=True) for e in page.elements],
+        ensure_ascii=False,
+    )
+
+
+def build_turn_input(ctx: TurnContext, message: str) -> str:
+    """The index goes in the first turn's input: with the real key the model
+    skipped read_page and invented refs. read_page stays as a tool for the
+    re-read after ref_not_found.
+    """
+    return f"page.elements index:\n{_index_json(ctx.page)}\n\nUser message:\n{message}"
+
+
 def build_agent_tools(ctx: TurnContext, session: SessionState):
     """The plain callables the SDK wraps as tools. Returned unwrapped so tests
     can drive the real path's wiring without a network call.
     """
 
     def read_page_tool() -> str:
-        page = read_page(ctx)
-        return f"{len(page.elements)} elements available"
+        return _index_json(read_page(ctx))
 
     def fill_field_tool(ref: str, value: str, reason: str) -> str:
         try:
@@ -288,6 +314,7 @@ def build_agent_tools(ctx: TurnContext, session: SessionState):
 
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+DEFAULT_MODEL = "gpt-4o-mini"
 
 
 def configure_model_client() -> str:
@@ -327,6 +354,9 @@ def _run_real_agent(ctx: TurnContext, session: SessionState, message: str) -> st
     # (docs/API_CONTRACTS.md, "Herramientas"), not the Python identifiers.
     agent = Agent(
         name="ventana",
+        # ponytail: the SDK default is a reasoning model that takes ~11s per turn,
+        # past the contract's 8s timeout. A fast model does the job in ~3s.
+        model=os.environ.get("VENTANA_MODEL", DEFAULT_MODEL),
         instructions=build_instructions(ctx.locale),
         tools=[
             function_tool(read_page_tool, name_override="read_page"),
@@ -335,7 +365,7 @@ def _run_real_agent(ctx: TurnContext, session: SessionState, message: str) -> st
         ],
     )
 
-    result = Runner.run_sync(agent, message)
+    result = Runner.run_sync(agent, build_turn_input(ctx, message))
     return str(result.final_output or "")
 
 

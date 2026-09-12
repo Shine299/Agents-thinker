@@ -7,10 +7,10 @@ Retrospectiva continua del proyecto Ventana. Se actualiza en vivo, con hora, por
 | Sprint | Estado | Veredicto | Evidencia |
 | --- | --- | --- | --- |
 | **Sprint-01** — scaffolding, contrato, mocks | **COMPLETADO** | APROBADO (pasada 2, tras auditoría) | `.sprints/SPEC-01.md` — 6/6 pytest + 10/10 banco de `content.js` en la primera auditoría; corregido a 26 tests / 13 checks en la segunda |
-| **Sprint-02** — llenado real, aprobación, reintento, Exa | **COMPLETADO** | APROBADO (pasada 2, tras auditoría) | `.sprints/SPEC-02.md` — 44/44 pytest + 19/19 banco de `content.js` + 14/14 banco de `panel.js` |
+| **Sprint-02** — llenado real, aprobación, reintento, Exa | **CERRADO** | APROBADO (pasada 3, con claves reales) | `.sprints/SPEC-02.md` — 46/46 pytest + 20/20 banco de `content.js` + 15/15 banco de `panel.js` + 6/6 E2E por HTTP con OpenAI y Exa reales |
 | **Punto de Decisión 1** (12:30) | **Verde** | Extensión cargada y probada en Chrome real | Ver fila de la tabla de abajo |
 
-**Único punto pendiente para que el flujo corra con datos reales (no `stub`):** credenciales de OpenAI y Exa. Ver **[`docs/PENDIENTES.md`](docs/PENDIENTES.md)** — instrucciones para que cualquier compañero con las claves las active sin tocar código.
+**Claves de OpenAI y Exa ya activas** (`backend/.env`, 2026-09-12). El flujo corre con modelo real por defecto. Ver [`docs/PENDIENTES.md`](docs/PENDIENTES.md) para operar las claves y el modelo. **Único pendiente humano de Sprint-02:** grabación de pantalla parcial en Chrome.
 
 ## Estado del sistema (actualizar en cada cierre de tarea)
 
@@ -27,6 +27,9 @@ Retrospectiva continua del proyecto Ventana. Se actualiza en vivo, con hora, por
 | 15:10 | B | Backend Sprint-02 tras auditoría (`agent.py`, `tools.py`, `session_store.py` nuevo) | Verde (pasada 2) | 2 defectos graves + 1 gap de cobertura corregidos con TDD real (Rojo capturado a las 14:31). Suite: 35 → **44 tests** |
 | 15:10 | A | `extension/panel.js` tras auditoría | Verde | `discardAction` ahora avisa al backend; claves `state.loading`/`action.approved`/`trace.retry` puestas en uso real; 3 claves muertas eliminadas. Banco de pruebas nuevo (`extension/test-panel.html`, vía jsdom + mocks de `chrome.*`/`fetch`): **14/14** |
 | 15:10 | C | `verify_entity` cableado al agente (stub y real) | Verde | Detecta empresa/RUC en el mensaje libre y llama `verify_entity` antes de proponer el campo relacionado — verificado por HTTP real contra el caso de demo completo |
+| 2026-09-12 | B | Backend con claves reales (`main.py`, `agent.py`) | Verde (pasada 3) | 5 defectos del camino real corregidos (ver "Verificación con claves reales"). Suite 44 → **46**. E2E por HTTP 6/6 con `gpt-4o-mini` + Exa |
+| 2026-09-12 | C | `extension/run-benches.mjs` | Verde | Runner comiteado para los dos bancos jsdom (antes solo existía en la máquina de quien los corrió). 20/20 + 15/15 |
+| 2026-09-12 | — | Repo público | Verde | `Shine299/Agents-thinker` existe y es el `origin` — fila de Sprint-01 cerrada |
 
 *(Sprint-01 cerrado en solitario — sin equipo de 4, secuencia A→pero ejecutado C→A→B→D según el plan aprobado. Sprint-02 fusionó la conexión real panel↔backend, originalmente prevista para Sprint-03: no tiene sentido simular un mock cuando el backend real ya funciona, en un proyecto de una sola persona. Ver `.sprints/SPEC-01.md` y `.sprints/SPEC-02.md` para las bitácoras Rojo→Verde completas.)*
 
@@ -36,7 +39,7 @@ Retrospectiva continua del proyecto Ventana. Se actualiza en vivo, con hora, por
 | --- | --- | --- |
 | OpenAI Agents SDK | Librería permitida | Provee el agent loop y el tool calling; el prompt de sistema, las 2 herramientas de Sprint-01 (`read_page`, `fill_field`) y su lógica de negocio se escriben hoy en `backend/agent.py`/`tools.py` |
 | Estructura de manifest MV3 | Patrón de plantilla estándar de Chrome | El indexado del DOM (`indexPage()`), `labelFor()` con fallbacks, y el puente del service worker son código nuevo del evento |
-| Exa API | Servicio de sponsor | La herramienta `verify_entity` está escrita y **cableada al agente** (stub determinista + camino real vía `exa_py`, import perezoso). **Pendiente:** clave real de Exa — el equipo aún no la canjea; hasta entonces corre en modo stub, indistinguible por contrato |
+| Exa API | Servicio de sponsor | La herramienta `verify_entity` está escrita y **cableada al agente** (stub determinista + camino real vía `exa_py`, import perezoso). Clave real activa desde 2026-09-12: verificada contra el caso de demo |
 | Capa i18n (`t()`, `en.json`, `es.json`) | Construido hoy | Implementación propia de ~30 líneas en `extension/i18n/index.js`, sin librería externa; paridad de claves certificada por test automatizado |
 | Portal clonado | **Decisión tomada:** sintético, no clon de un sitio real | Construido íntegramente hoy (`portal-demo/mesa-partes.html`) con fealdad deliberada (tablas anidadas, IDs `ctl00_cphMain_*`, sin `<label for>`) en vez de `Save page as → Complete` sobre un portal real — ver justificación abajo |
 | Backend `stub` (`VENTANA_AGENT_BACKEND=stub`) | Construido hoy, temporal | Agente determinista sin llamadas de red, para certificar Verde antes de canjear la clave de OpenAI (R8). Debe desaparecer o quedar solo como respaldo documentado antes de Sprint-03 |
@@ -100,7 +103,26 @@ Veredicto pasada 1: **RECHAZADO.**
 
 **Lección de fondo, repetida de Sprint-01 con una variante nueva:** no basta con "cada camino que el stub sustituye necesita un test del real" — hace falta además **un test que efectivamente invoque el flujo completo**, no solo la función aislada. `verify_entity` tenía tests propios en Verde y aun así estaba desconectado; los tests unitarios de una pieza no prueban que esa pieza esté *enchufada*.
 
+## Verificación con claves reales (2026-09-12) — pasada 3 de Sprint-02
+
+Con las claves puestas, el camino real falló de 5 formas distintas. **Ninguna era detectable en `stub`**, y las dos primeras ni siquiera eran detectables sin una clave con crédito. Es la tercera vez que el patrón se repite: el stub certifica el contrato, no el producto.
+
+| # | Defecto | Cómo se vio | Corrección | Test |
+| --- | --- | --- | --- | --- |
+| C1 | `backend/.env` **nunca se cargaba**: `python-dotenv` estaba en `requirements.txt` sin que nadie llamara `load_dotenv()` | Las claves puestas no tenían efecto | `load_dotenv(Path(__file__).with_name(".env"))` en `main.py` | Manual (`EXA_API_KEY=probe` → cargado) |
+| C2 | `read_page_tool` devolvía al modelo `"4 elements available"` — **el modelo nunca veía refs ni labels** y los inventaba (`contact_name`, `ruc`) → `ref_not_found` en cadena | `trace` de la primera corrida real | La tool devuelve el índice JSON compacto (`exclude_none`, `exclude_defaults`) | `test_read_page_tool_shows_the_model_every_ref_and_label` |
+| C3 | El modelo **ni llamaba `read_page`** antes de proponer: iba directo a `fill_field` | Ídem | Índice inyectado en el input del turno (`build_turn_input`); `read_page` queda como tool para la relectura tras `ref_not_found` | `test_turn_input_carries_the_page_index_and_the_user_message` |
+| C4 | Modelo por defecto del SDK (`gpt-5.6-luna`, razonador): **11s por turno** > 8s del contrato | `timeout after 8s` | `DEFAULT_MODEL = "gpt-4o-mini"` (override con `VENTANA_MODEL`). Timeout 8 → 20s: el caso de demo real de 10 campos tarda 7.6–10.5s | Medido, 6/6 corridas |
+| C5 | Prompt: decía "he llenado" sin aprobación; `gpt-4.1-mini` respondía en ES con `locale: "en"`; pasaba el correo entero a `verify_entity`; y **vetaba** la propuesta cuando Exa devolvía un RUC distinto | Corridas reales 2 modelos × 2 idiomas | Prompt afinado: refs exactos, tanda única de `fill_field`, "propone y espera aprobación", locale estricto, **verificación informativa, no veto** (la discrepancia va al `reason`) | 6/6 corridas reales |
+
+**Decisión sobre el caso de demo:** el RUC `20456789123` de `demo-case.txt` es ficticio; Exa encuentra "EXPORT IMPORT & GRUPO ANDINO SAC – 20539177398". Se mantiene el ficticio a propósito: el agente propone el valor del correo y anota en el `reason` que la verificación externa devolvió otro RUC — es el momento más vendible del video ("el agente lo detectó, y aun así la decisión es tuya").
+
+**Decisión de modelo:** `gpt-4o-mini` sobre `gpt-4.1-mini`. Con el mismo prompt, 4o-mini respeta el orden `verify_entity` → `fill_field`, respeta el `locale` y pone la discrepancia del RUC en el `reason`; 4.1-mini verificaba al final y en una corrida ignoró el locale.
+
 ## Lecciones aprendidas
+
+- **Tercera repetición del patrón stub:** las claves reales sacaron 5 defectos, y dos de ellos (C2, C3) hacían el producto **inservible** — el modelo no podía citar un solo ref válido — mientras 44 tests y 34 checks estaban en verde. Regla nueva, además de las dos anteriores: **ninguna fila del backlog que dependa del modelo se marca Done sin al menos una corrida con clave real registrada en la bitácora.** Un stub certifica el contrato, no el producto.
+- **El timeout del contrato se calibró sin medir.** 8s era un número razonable para un stub; un modelo real con 11 tool calls necesita 8–10s. Medir antes de congelar.
 
 - **`openai-agents` NO importa en Python 3.9 — y esta máquina tiene 3.9.6, no 3.11+.** Corrección de una nota anterior de esta misma bitácora, que decía que "instaló y corrió sin problema": **instaló, pero fallaba al importar en runtime** (`TypeError: Unable to evaluate type annotation 'float | None'`, sintaxis de unión de 3.10+ dentro del SDK). No se detectó antes porque **solo se había ejecutado el modo `stub`**, que nunca importa el SDK. Es exactamente el fallo que `docs/PREPARACION_PREVIA.md` manda descubrir antes de las 11:15 ("una llamada real a la API verificada"). Resuelto añadiendo `eval_type_backport` a `requirements.txt` (inofensivo en 3.11+). **Si hay tiempo, instalar Python 3.11+ igualmente** — es lo que pide `TECH_STACK.md` y evita más sorpresas del SDK.
 - **Los dos topes del contrato no son independientes: el de 6 KB satura mucho antes que el de 150 elementos.** Medido: 400 campos se recortan a **59**, no a 150, porque el esqueleto JSON de cada elemento (~95 bytes) hace que 150 elementos pesen ~14 KB. En la práctica el índice nunca pasará de ~60 elementos. Irrelevante para el portal de demo (12 campos), pero **un portal legado real con 200 campos perdería la mayoría**, y el agente no vería los campos recortados. No se cambió la forma del payload porque el contrato está congelado desde las 11:15; queda como riesgo abierto para Sprint-02 (opción barata: omitir claves nulas/`false` al serializar, que casi duplica los campos que caben).

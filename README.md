@@ -73,6 +73,7 @@ Policy and key conventions: [`docs/I18N_POLICY.md`](docs/I18N_POLICY.md).
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env   # add OPENAI_API_KEY and EXA_API_KEY
 uvicorn main:app --port 8000
 
 # Demo portal
