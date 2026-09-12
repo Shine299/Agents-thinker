@@ -7,30 +7,46 @@
 | Tiempo | Contenido | Qué debe verse en pantalla | Criterio que gana |
 | --- | --- | --- | --- |
 | 0:00–0:15 | El problema en una frase: sistemas donde no hay API y nunca la habrá | El portal real en pantalla, con su fealdad estructural visible | Contexto |
-| 0:15–0:30 | La tesis: cuando no hay API, el navegador es la API. El agente entra por donde entra el usuario | El side panel abriéndose sobre la pestaña ya autenticada | **B — Innovación** |
+| 0:15–0:30 | Se nombra el producto: Wicket AI. La tesis: cuando no hay API, el navegador es la API. El agente entra por donde entra el usuario | El side panel abriéndose sobre la pestaña ya autenticada | **B — Innovación** |
 | 0:30–1:15 | **Demo del Flujo 1.** Pegar el correo → el agente lee la página → propone el llenado campo por campo → el usuario aprueba → los campos se llenan solos | El panel con el plan de acciones visible, cada fila con su `reason` | **A — Funcionalidad** |
 | 1:15–1:35 | Manejo de fallo: un elemento no encontrado, el agente re-lee la página y se recupera. Y el botón de enviar lo pulsa la persona, no el agente | El `trace` en el log del panel mostrando el reintento. El cursor humano sobre el botón de envío | **C — Ejecución** y **D — Control** |
 | 1:35–1:45 | **Cambio de idioma en vivo**: pulsar EN en la cabecera y mostrar que el panel y la siguiente respuesta del agente cambian de idioma sin perder la sesión | El selector ES/EN y el historial intacto | **D — Utilidad** |
 | 1:45–1:50 | La arquitectura en una imagen: índice compacto del DOM, cuatro herramientas, aprobación humana | Diagrama estático de `ARCHITECTURE.md` | **C — Ejecución** |
 | 1:50–2:00 | Qué se construyó hoy y qué sigue. Agradecer y etiquetar a los partners | Pantalla de cierre con logos/handles | Elegibilidad |
 
-## Frases que conviene decir literalmente
+## Guion exacto (palabra por palabra, listo para leer al grabar)
 
-**La frase que entrega el criterio de Innovación ya masticado al jurado:**
+Narración en español, con una frase en inglés a propósito en el cambio de idioma (0:35–0:45) — es la prueba en vivo de que el producto es bilingüe, no solo una traducción de UI. El nombre del producto es **Wicket AI**; decirlo completo la primera vez (0:15) y una vez más durante la demo (0:30–1:15), nunca "Ventana" (nombre interno de trabajo, no el nombre público).
 
-> "Esto no funcionaría en un chat. El agente necesita estar dentro de la sesión del usuario, sobre la página que está viendo ahora mismo."
+**0:00–0:15** — mostrando `mesa-partes.html`, panel cerrado:
+> "Todo agente de IA asume que el sistema tiene una API. Los sistemas donde se hace el trabajo administrativo en Latinoamérica no la tienen, y nunca la tendrán: mesas de partes, intranets universitarias, portales públicos, ERPs de hace quince años."
 
-**La frase que separa un 4 de un 5 en ejecución técnica** (decirla mientras se muestra el índice):
+**0:15–0:30** — abriendo el side panel sobre la misma pestaña:
+> "Wicket AI es el agente que trabaja dentro de la pestaña que ya tienes abierta. Esto no funcionaría en un chat. El agente necesita estar dentro de la sesión del usuario, sobre la página que está viendo ahora mismo."
 
-> "El indexado excluye todo campo de contraseña. Ninguna credencial sale de la pestaña."
+**0:30–1:15** — pegar el correo, esperar la propuesta, señalar la fila del RUC:
+> "Pego el correo de la solicitud. Wicket AI lee la página y propone el llenado campo por campo, cada uno con su razonamiento. Este RUC lo verificó contra una fuente externa antes de proponerlo — encontró una discrepancia, me lo dice aquí, y aun así la decisión de aprobarlo es mía."
 
-**La frase bilingüe** (decirla en el cambio de idioma, 1:35–1:45):
+**1:15–1:35** — F5 en el portal, aprobar, ver el reintento, aprobar el resto, pulsar tú "Enviar Solicitud":
+> "Si la página cambia debajo del agente, se da cuenta, vuelve a leerla, y reintenta una sola vez — nunca en bucle, nunca en silencio. El agente puede leer, puede proponer, puede escribir tras aprobación. Lo que nunca hace es enviar. Esa herramienta no está deshabilitada: no existe."
 
+**1:35–1:45** — cambiar ES→EN en la cabecera, mandar un mensaje corto:
 > "The portals are in Spanish. The people using them work in Spanish. The agent speaks their language — and it speaks yours."
 
-**La frase de control de usuario** (decirla en el minuto 1:15–1:35):
+**1:45–1:50** — diagrama estático de `ARCHITECTURE.md`:
+> "Por dentro: un índice compacto del DOM en vez del HTML completo, tres herramientas, y aprobación humana en cada paso que escribe algo. El indexado excluye todo campo de contraseña. Ninguna credencial sale de la pestaña."
 
-> "El agente puede leer, puede proponer, puede escribir tras aprobación. Lo que nunca hace es enviar. Esa herramienta no está deshabilitada: no existe."
+**1:50–2:00** — pantalla de cierre con logos:
+> "Todo esto se construyó hoy, en las horas del evento. Gracias a AI Tinkerers Lima, a OpenAI y a Exa."
+
+## Las 4 frases clave (referencia rápida en cámara — texto completo en "Guion exacto" arriba)
+
+| Cuándo | Frase | Por qué |
+| --- | --- | --- |
+| 0:15–0:30 | "Esto no funcionaría en un chat. El agente necesita estar dentro de la sesión del usuario, sobre la página que está viendo ahora mismo." | Criterio B — Innovación |
+| 1:45–1:50 | "El indexado excluye todo campo de contraseña. Ninguna credencial sale de la pestaña." | Criterio C — Ejecución técnica |
+| 1:35–1:45 | "The portals are in Spanish. The people using them work in Spanish. The agent speaks their language — and it speaks yours." | Criterio D — Utilidad, en inglés a propósito |
+| 1:15–1:35 | "El agente puede leer, puede proponer, puede escribir tras aprobación. Lo que nunca hace es enviar. Esa herramienta no está deshabilitada: no existe." | Criterio D — Control del usuario |
 
 ## Reglas de grabación
 
@@ -43,21 +59,22 @@
 
 Entorno: backend en `:8000` (claves reales activas), portal en `:5500/mesa-partes.html`, extensión cargada.
 
-| Tiempo del guion | Acción exacta | Qué debe verse |
+| Tiempo del guion | Acción exacta | Qué se dice |
 | --- | --- | --- |
-| 0:00–0:15 | Mostrar `mesa-partes.html` cargado, sin el panel abierto | El portal feo (tablas anidadas, sin estilos modernos) |
-| 0:15–0:30 | Abrir el side panel sobre la misma pestaña. Decir la frase de Innovación | Panel "Connected" sobre la pestaña ya autenticada |
-| 0:30–1:15 | Pegar el correo de `portal-demo/demo-case.txt` (solo el cuerpo del correo, sin las notas internas). Enviar. Esperar la respuesta (6–11s reales) | El plan de 10 acciones con su `reason` cada una — señalar la fila del RUC: el `reason` dice que la verificación externa (Exa) encontró otra empresa para ese RUC, y aun así se propone el valor del correo |
-| 1:15–1:35 | Antes de aprobar el primer campo, pulsar F5 en la pestaña del portal (se pierden los `data-ventana-ref`). Aprobar ese campo → aparece `ref_not_found` → el log muestra el paso `retry` → nueva propuesta con ref fresco → aprobar de nuevo, el campo se llena y se pone verde. Decir la frase de control de usuario. Aprobar el resto y pulsar tú el botón "Enviar Solicitud" | El reintento visible en el log; el cursor humano sobre el botón de envío |
-| 1:35–1:45 | Cambiar ES→EN en la cabecera a mitad de sesión, mandar un mensaje corto nuevo | El historial intacto, la respuesta siguiente en inglés. Decir la frase bilingüe |
-| 1:45–1:50 | Diagrama estático de `ARCHITECTURE.md` | — |
-| 1:50–2:00 | Cierre, elegibilidad, logos de partners | — |
+| 0:00–0:15 | Mostrar `mesa-partes.html` cargado, sin el panel abierto | Párrafo 1 del "Guion exacto" |
+| 0:15–0:30 | Abrir el side panel sobre la misma pestaña | Párrafo 2 — aquí se nombra "Wicket AI" por primera vez y va la frase de Innovación |
+| 0:30–1:15 | Pegar el correo de `portal-demo/demo-case.txt` (solo el cuerpo del correo, sin las notas internas). Enviar. Esperar la respuesta (6–11s reales). Señalar la fila del RUC en el plan de acciones | Párrafo 3 — segunda vez que se nombra "Wicket AI"; la discrepancia del RUC (verificación real de Exa) sale en el `reason` de esa fila |
+| 1:15–1:35 | Antes de aprobar el primer campo, pulsar F5 en la pestaña del portal (se pierden los `data-ventana-ref`, id técnico interno — no se menciona en voz). Aprobar ese campo → aparece `ref_not_found` → el log muestra el paso `retry` → nueva propuesta con ref fresco → aprobar de nuevo, el campo se llena y se pone verde. Aprobar el resto y pulsar tú el botón "Enviar Solicitud" | Párrafo 4 — frase de control de usuario |
+| 1:35–1:45 | Cambiar ES→EN en la cabecera a mitad de sesión, mandar un mensaje corto nuevo | Párrafo 5 — la frase bilingüe, en inglés, literal |
+| 1:45–1:50 | Diagrama estático de `ARCHITECTURE.md` | Párrafo 6 |
+| 1:50–2:00 | Cierre, elegibilidad, logos de partners | Párrafo 7 |
 
 **Momento vendible nuevo (verificado hoy con Exa real):** el `reason` del campo RUC mostrando la discrepancia es la prueba en vivo de que el agente verifica contra una fuente externa y nunca decide por el humano — enlaza directo con la frase de control de usuario.
 
 ## Checklist antes de exportar
 
 - [ ] Dura 2 minutos o menos
+- [ ] Se dijo "Wicket AI" completo al menos dos veces (0:15 y 0:30–1:15), nunca "Ventana"
 - [ ] Se ve una corrida end-to-end real del Flujo 1, con entrada nueva
 - [ ] Se ve el reintento tras `ref_not_found` en el log
 - [ ] Se ve la verificación externa (Exa) en el `reason` de un campo, con su posible discrepancia

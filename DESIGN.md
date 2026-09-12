@@ -88,7 +88,7 @@ GLOBAL STYLE (apply to every section below):
 - Every section stacks to a single column on mobile, side padding maintained, no fixed-width elements wider than a phone screen. Buttons and links sized for real tap targets (44px+). Visible hover and focus states on every button and link (e.g. a darker blue #1E40AF on hover).
 
 SECTION 1 — Hero:
-Centered, max-width ~800px, generous top padding. At the very top, a small wordmark line: "Wicket" in bold near-black, with one short muted line right under it in smaller text: "the counter window where paperwork gets done" — this explains the name immediately, since it's not a common word for every reader. Below that, the headline (large, bold, near-black): "The agent that works inside the tab you already have open." One muted subtext line: "Wicket reads and fills legacy forms with no API — with a human approving every action that changes anything." One solid blue button with white text: "Watch the demo." Below the text, a single browser-window mockup on a soft gray card (rounded top corners, three dots, a URL bar) with a plain form on the left and a slim docked side panel on the right — exactly one form field is highlighted with a thin blue outline, everything else is neutral gray/white/black text, no other color.
+Centered, max-width ~800px, generous top padding. At the very top, a small wordmark line: "Wicket AI" in bold near-black, with one short muted line right under it in smaller text: "the counter window where paperwork gets done" — this explains the name immediately, since it's not a common word for every reader. Below that, the headline (large, bold, near-black): "The agent that works inside the tab you already have open." One muted subtext line: "Wicket AI reads and fills legacy forms with no API — with a human approving every action that changes anything." One solid blue button with white text: "Watch the demo." Below the text, a single browser-window mockup on a soft gray card (rounded top corners, three dots, a URL bar) with a plain form on the left and a slim docked side panel on the right — exactly one form field is highlighted with a thin blue outline, everything else is neutral gray/white/black text, no other color.
 
 SECTION 2 — Problem → thesis:
 Centered, max-width ~650px, tall vertical padding, white background, no visuals at all. One muted short line: "Government filing desks. University intranets. 15-year-old ERPs. No API, and never will be." Below it, a large bold centered statement in near-black with 3-4 words in accent blue: "When there is no API, the browser is the API."
@@ -103,7 +103,7 @@ SECTION 5 — Trust principle:
 A full-width rounded band with soft gray background #F6F7F9 and a thin border, no accent color in this section at all — calm and reassuring, not exciting. Centered: large bold near-black statement "The agent never submits." One muted line below: "It reads, it proposes, it writes fields after approval — but a person presses submit. The submit tool isn't disabled. It isn't implemented."
 
 SECTION 6 — Closing / footer:
-White background, centered heading: "See it fill a real form." One solid blue button with white text: "Watch the 2-minute demo." Below it, after a thin top border, one small centered muted monospace line: "Wicket — built in 4h15 for Agents, Everywhere, AI Tinkerers Lima · Sept 12 2026" and one row of 3 plain muted text links (underline on hover only, no icons): "GitHub" · "Architecture" · "Demo video."
+White background, centered heading: "See it fill a real form." One solid blue button with white text: "Watch the 2-minute demo." Below it, after a thin top border, one small centered muted monospace line: "Wicket AI — built in 4h15 for Agents, Everywhere, AI Tinkerers Lima · Sept 12 2026" and one row of 3 plain muted text links (underline on hover only, no icons): "GitHub" · "Architecture" · "Demo video."
 
 Render this as one page top to bottom, section 1 flowing directly into section 2 into 3 into 4 into 5 into 6, with consistent vertical rhythm between them, on a white background throughout — not as isolated cards or disconnected screens, and not dark-themed.
 ```
@@ -114,9 +114,9 @@ Render this as one page top to bottom, section 1 flowing directly into section 2
 
 Don't regenerate the whole page with these — send them as a chat follow-up on the page you already have, naming the section: *"In [section], do this: ..."*
 
-**Rename to Wicket** (use this one now, on whatever Stitch already generated)
+**Rename to Wicket AI** (use this one now, on whatever Stitch already generated)
 ```
-Rename the product everywhere on this page from "Ventana" to "Wicket." At the top of the hero section, above the existing headline, add a small wordmark: "Wicket" in bold near-black, with one short muted line right under it: "the counter window where paperwork gets done" — this explains the name since it isn't a common word for every reader. In the hero subtext, change "Ventana reads and fills..." to "Wicket reads and fills..." In the footer credit line, change "Ventana — built in 4h15..." to "Wicket — built in 4h15..." Don't change anything else on the page — same layout, same colors, same copy everywhere else.
+Rename the product everywhere on this page from "Ventana" to "Wicket AI." At the top of the hero section, above the existing headline, add a small wordmark: "Wicket AI" in bold near-black, with one short muted line right under it: "the counter window where paperwork gets done" — this explains the name since it isn't a common word for every reader. In the hero subtext, change "Ventana reads and fills..." to "Wicket AI reads and fills..." In the footer credit line, change "Ventana — built in 4h15..." to "Wicket AI — built in 4h15..." Don't change anything else on the page — same layout, same colors, same copy everywhere else.
 ```
 
 **Hero**
