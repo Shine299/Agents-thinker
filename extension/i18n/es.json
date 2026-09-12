@@ -1,0 +1,20 @@
+{
+  "panel.title": "Ventana",
+  "panel.connected": "Conectado",
+  "panel.disconnected": "Sin conexión",
+  "input.placeholder": "Pega aquí el correo o el texto de la solicitud",
+  "input.submit": "Llenar formulario",
+  "page.elementsDetected": "{count} campos detectados en esta página",
+  "page.noPasswords": "Los campos de contraseña nunca se indexan",
+  "page.indexNow": "Leer página",
+  "action.planTitle": "Plan de acciones",
+  "action.approve": "Aprobar",
+  "action.discard": "Descartar",
+  "action.approved": "Aprobado",
+  "trace.title": "Pasos del agente",
+  "trace.retry": "reintento",
+  "state.loading": "Trabajando…",
+  "state.empty": "Aún no hay acciones propuestas",
+  "error.backendUnreachable": "No pude contactar al agente local. El panel sigue activo; puedes reintentar.",
+  "error.pageUnreachable": "No pude leer la página. Recarga la pestaña del portal y vuelve a intentarlo."
+}

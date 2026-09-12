@@ -1,0 +1,108 @@
+{
+  "url": "http://localhost:5500/mesa-partes.html",
+  "title": "Sistema de Tramite Documentario - Mesa de Partes Virtual",
+  "elements": [
+    {
+      "ref": "e0",
+      "tag": "input",
+      "type": "text",
+      "label": "Nombre del solicitante",
+      "value": "",
+      "options": null,
+      "required": false
+    },
+    {
+      "ref": "e1",
+      "tag": "select",
+      "type": null,
+      "label": "Tipo de documento",
+      "value": "",
+      "options": [
+        { "value": "", "text": "-- Seleccione --" },
+        { "value": "DNI", "text": "DNI" },
+        { "value": "CE", "text": "Carnet de Extranjeria" },
+        { "value": "PAS", "text": "Pasaporte" },
+        { "value": "RUC", "text": "RUC" }
+      ],
+      "required": false
+    },
+    {
+      "ref": "e2",
+      "tag": "input",
+      "type": "text",
+      "label": "Numero de documento",
+      "value": "",
+      "options": null,
+      "required": false
+    },
+    {
+      "ref": "e3",
+      "tag": "input",
+      "type": "text",
+      "label": "Razon social de la empresa",
+      "value": "",
+      "options": null,
+      "required": false
+    },
+    {
+      "ref": "e4",
+      "tag": "input",
+      "type": "text",
+      "label": "RUC de la empresa",
+      "value": "",
+      "options": null,
+      "required": false
+    },
+    {
+      "ref": "e5",
+      "tag": "input",
+      "type": "text",
+      "label": "Correo electronico",
+      "value": "",
+      "options": null,
+      "required": false
+    },
+    {
+      "ref": "e6",
+      "tag": "input",
+      "type": "text",
+      "label": "Telefono de contacto",
+      "value": "",
+      "options": null,
+      "required": false
+    },
+    {
+      "ref": "e7",
+      "tag": "input",
+      "type": "text",
+      "label": "Asunto",
+      "value": "",
+      "options": null,
+      "required": false
+    },
+    {
+      "ref": "e8",
+      "tag": "select",
+      "type": null,
+      "label": "Dependencia destino",
+      "value": "",
+      "options": [
+        { "value": "", "text": "-- Seleccione --" },
+        { "value": "MP-LEGAL", "text": "Mesa de Partes - Asesoria Legal" },
+        { "value": "MP-TESO", "text": "Mesa de Partes - Tesoreria" },
+        { "value": "MP-RRHH", "text": "Mesa de Partes - Recursos Humanos" },
+        { "value": "MP-LOGIS", "text": "Mesa de Partes - Logistica" }
+      ],
+      "required": false
+    },
+    {
+      "ref": "e9",
+      "tag": "textarea",
+      "type": null,
+      "label": "Detalle de la solicitud",
+      "value": "",
+      "options": null,
+      "required": false
+    }
+  ]
+}

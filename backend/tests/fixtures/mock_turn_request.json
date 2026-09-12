@@ -1,0 +1,21 @@
+{
+  "session_id": "s_demo",
+  "locale": "es",
+  "message": "Llena el formulario con este correo: Juan Perez Quispe, DNI 45789231, Grupo Andino SAC, RUC 20456789123.",
+  "page": {
+    "url": "http://localhost:5500/mesa-partes.html",
+    "title": "Sistema de Tramite Documentario - Mesa de Partes Virtual",
+    "elements": [
+      {
+        "ref": "e0",
+        "tag": "input",
+        "type": "text",
+        "label": "Nombre del solicitante",
+        "value": "",
+        "options": null,
+        "required": false
+      }
+    ]
+  },
+  "action_results": null
+}

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ventana — indexPage() test bench</title>
+<style>
+  body { font-family: monospace; font-size: 13px; padding: 16px; }
+  .pass { color: #1a6e1a; }
+  .fail { color: #b30000; font-weight: bold; }
+  #fixture { display: none; }
+</style>
+</head>
+<body>
+<h2>indexPage() / labelFor() test bench</h2>
+<div id="results"></div>
+
+<!-- Fixture DOM exercising the full labelFor fallback chain -->
+<div id="fixture">
+  <label for="f1">Nombre (label for)</label>
+  <input type="text" id="f1">
+
+  <input type="text" id="f2" aria-label="Correo (aria-label)">
+
+  <input type="text" id="f3" placeholder="Telefono (placeholder)">
+
+  <table>
+    <tr><td>RUC (td previo)</td><td><input type="text" id="f4"></td></tr>
+  </table>
+
+  Asunto (hermano previo):<input type="text" id="f5">
+
+  <input type="password" id="f6">
+
+  <select id="f7">
+    <option value="a">A</option>
+    <option value="b">B</option>
+  </select>
+
+  <!-- Only real input/change events (bubbles:true) trigger this validator —
+       plain el.value = x would not (docs/RIESGOS.md R4). -->
+  <input type="text" id="f8" aria-label="Validated field"
+         oninput="this.dataset.validated = 'true'">
+</div>
+
+<script src="../extension/content.js"></script>
+<script>
+  const results = [];
+  function check(name, condition) {
+    results.push({ name, pass: !!condition });
+  }
+
+  const fixture = document.getElementById("fixture");
+
+  const f1 = document.getElementById("f1");
+  check("labelFor: <label for> resolves", labelFor(f1) === "Nombre (label for)");
+
+  const f2 = document.getElementById("f2");
+  check("labelFor: aria-label resolves", labelFor(f2) === "Correo (aria-label)");
+
+  const f3 = document.getElementById("f3");
+  check("labelFor: placeholder resolves", labelFor(f3) === "Telefono (placeholder)");
+
+  const f4 = document.getElementById("f4");
+  check("labelFor: previous <td> resolves", labelFor(f4) === "RUC (td previo)");
+
+  const f5 = document.getElementById("f5");
+  check("labelFor: previous sibling text resolves", labelFor(f5).includes("Asunto"));
+
+  const index = indexPage(document);
+
+  check(
+    "indexPage: never includes input[type=password]",
+    !index.elements.some((el) => el.type === "password")
+  );
+
+  const refs = index.elements.map((el) => el.ref);
+  check("indexPage: refs are unique", new Set(refs).size === refs.length);
+
+  const selectEl = index.elements.find((el) => el.tag === "select");
+  check("indexPage: select options captured, capped at MAX_OPTIONS", selectEl && selectEl.options.length <= MAX_OPTIONS);
+
+  // --- Cap tests: these build oversized documents on purpose, so the 150-element
+  // and 6 KB limits are actually exercised and not asserted vacuously. ---
+
+  function buildDoc(count, labelText) {
+    const doc = document.implementation.createHTMLDocument("cap fixture");
+    for (let i = 0; i < count; i++) {
+      const input = doc.createElement("input");
+      input.type = "text";
+      input.setAttribute("aria-label", `${labelText} ${i}`);
+      doc.body.appendChild(input);
+    }
+    return doc;
+  }
+
+  // 400 elements -> must be trimmed. Both caps apply at once and the 6 KB cap
+  // binds first in practice (see MEMORY.md, "los dos topes no son independientes"),
+  // so the guarantee is: never above MAX_ELEMENTS, never above MAX_BYTES, and
+  // trimming demonstrably happened.
+  const bigDoc = buildDoc(400, "Campo");
+  const bigIndex = indexPage(bigDoc);
+  const bigBytes = new TextEncoder().encode(JSON.stringify(bigIndex.elements)).length;
+  check(
+    `indexPage: 400 elements never exceed MAX_ELEMENTS (got ${bigIndex.elements.length})`,
+    bigIndex.elements.length <= MAX_ELEMENTS
+  );
+  check(
+    `indexPage: 400 elements were actually trimmed (${bigIndex.elements.length} < 400)`,
+    bigIndex.elements.length < 400
+  );
+  check(
+    `indexPage: 400-element payload stays under MAX_BYTES (got ${bigBytes} bytes)`,
+    bigBytes <= MAX_BYTES
+  );
+
+  // 150 elements each carrying a long label -> over 6 KB, must be trimmed further.
+  const longLabel = "Nombre completo del solicitante segun documento de identidad vigente";
+  const fatDoc = buildDoc(150, longLabel);
+  const fatIndexRaw = Array.from(fatDoc.querySelectorAll("input")).length;
+  const fatIndex = indexPage(fatDoc);
+  const fatBytes = new TextEncoder().encode(JSON.stringify(fatIndex.elements)).length;
+
+  check(
+    `indexPage: oversized payload trimmed under MAX_BYTES (got ${fatBytes} bytes)`,
+    fatBytes <= MAX_BYTES
+  );
+  check(
+    `indexPage: byte cap actually dropped elements (${fatIndex.elements.length} < ${fatIndexRaw})`,
+    fatIndex.elements.length < fatIndexRaw
+  );
+
+  // --- executeActions: SPEC-02 real DOM writes ---
+
+  const f8 = document.getElementById("f8");
+  const f8Ref = index.elements.find((el) => el.label === "Validated field").ref;
+
+  const execResults = executeActions([
+    { action_id: "a1", tool: "fill_field", args: { ref: f8Ref, value: "hello world" } },
+  ]);
+
+  check("executeActions: sets the element's value", f8.value === "hello world");
+  check(
+    "executeActions: dispatches a real input event (bubbles:true), not a bare assignment",
+    f8.dataset.validated === "true"
+  );
+  check(
+    "executeActions: returns ok:true action_results shaped per the contract",
+    execResults.length === 1 && execResults[0].ok === true && execResults[0].action_id === "a1"
+  );
+
+  const missingRefResults = executeActions([
+    { action_id: "a2", tool: "fill_field", args: { ref: "e999", value: "x" } },
+  ]);
+  check(
+    "executeActions: unknown ref returns ok:false with error ref_not_found (never throws)",
+    missingRefResults[0].ok === false && missingRefResults[0].error === "ref_not_found"
+  );
+
+  // Regression lock: a ref must never silently resolve to the WRONG element
+  // just because something earlier in the DOM was removed after indexing.
+  const shiftDoc = document.implementation.createHTMLDocument("shift fixture");
+  ["Uno", "Dos", "Tres"].forEach((label) => {
+    const input = shiftDoc.createElement("input");
+    input.type = "text";
+    input.setAttribute("aria-label", label);
+    shiftDoc.body.appendChild(input);
+  });
+  const shiftIndex = indexPage(shiftDoc);
+  const refForTres = shiftIndex.elements.find((el) => el.label === "Tres").ref;
+  shiftDoc.querySelector('[aria-label="Uno"]').remove(); // shifts DOM order
+  const shiftResult = executeActions(
+    [{ action_id: "a1", tool: "fill_field", args: { ref: refForTres, value: "ok" } }],
+    shiftDoc
+  );
+  check(
+    "executeActions: ref still resolves to its original element after an earlier sibling is removed",
+    shiftDoc.querySelector('[aria-label="Tres"]').value === "ok"
+  );
+  check(
+    "executeActions: ref never resolves to a different element after a DOM shift",
+    shiftDoc.querySelector('[aria-label="Dos"]').value !== "ok"
+  );
+
+  const el = document.getElementById("results");
+  let failCount = 0;
+  results.forEach((r) => {
+    const line = document.createElement("div");
+    line.className = r.pass ? "pass" : "fail";
+    line.textContent = `${r.pass ? "PASS" : "FAIL"} — ${r.name}`;
+    el.appendChild(line);
+    if (!r.pass) failCount++;
+  });
+
+  const summary = document.createElement("div");
+  summary.style.marginTop = "12px";
+  summary.className = failCount === 0 ? "pass" : "fail";
+  summary.textContent = failCount === 0
+    ? `ALL ${results.length} CHECKS PASSED`
+    : `${failCount} of ${results.length} CHECKS FAILED`;
+  el.appendChild(summary);
+</script>
+</body>
+</html>

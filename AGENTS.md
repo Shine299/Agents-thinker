@@ -42,6 +42,7 @@ Reglas de operación para trabajar híbridamente (humanos + agentes de código) 
 | `docs/RIESGOS.md` | Abierto todo el build; C y el Supervisor lo revisan en cada punto de decisión |
 | `docs/GUION_VIDEO.md` | D, desde las 11:15; primer corte 13:30, final 15:00 |
 | `docs/CREDITOS_SPONSORS.md` | 10:00 (encuesta) y 14:00 (decisión sobre Ambiguous AI) |
+| `docs/PENDIENTES.md` | Quien canjee las claves de OpenAI/Exa, apenas las tenga — activa el modo real sin tocar código |
 | `README.md` | D, desde las 11:15; limitaciones conocidas se llenan a las 14:30 |
 
 **Estado de estas reglas: Activa.**

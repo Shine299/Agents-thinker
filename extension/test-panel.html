@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Ventana — panel.js test bench</title>
+<style>
+  body { font-family: monospace; font-size: 13px; padding: 16px; }
+  .pass { color: #1a6e1a; }
+  .fail { color: #b30000; font-weight: bold; }
+</style>
+</head>
+<body>
+<h2>panel.js integration test bench</h2>
+<div id="results"></div>
+
+<!-- Same structure as panel.html — panel.js looks up these exact ids. Kept
+     separate from panel.html itself so a markup change there doesn't need to
+     be mirrored here by hand for the bench to still exercise the real
+     panel.js unmodified; see the DOD note in MEMORY.md about this coupling. -->
+<div id="panelUnderTest">
+  <header>
+    <h1 id="panelTitle">Ventana</h1>
+    <div class="header-right">
+      <div id="localeSwitch">
+        <button id="localeEsBtn" type="button">ES</button>
+        <button id="localeEnBtn" type="button">EN</button>
+      </div>
+      <span id="status">…</span>
+    </div>
+  </header>
+
+  <button id="indexBtn"></button>
+  <div id="indexInfo"></div>
+
+  <textarea id="messageInput"></textarea>
+  <button id="submitBtn"></button>
+
+  <div id="replyArea"></div>
+
+  <section>
+    <h2 id="actionsTitle"></h2>
+    <div id="actionsEmpty"></div>
+    <div id="actions"></div>
+  </section>
+
+  <section>
+    <h2 id="traceTitle"></h2>
+    <div id="trace"></div>
+  </section>
+</div>
+
+<script>
+  // --- Fakes for everything panel.js expects from its host environment ---
+  // This is a controlled double, not the real extension: it drives panel.js's
+  // own logic (session id stability, request shapes, approve/discard
+  // semantics) without needing Chrome or a live backend. Backend behavior
+  // itself is covered by backend/tests/; this covers what only panel.js can
+  // get wrong.
+
+  window.__contentState = { elements: [], executeActionsCallCount: 0 };
+  window.__fetchCalls = [];
+  window.__turnQueue = []; // canned /agent/turn responses, consumed in call order
+
+  // The real dictionary contents are injected as window.__i18nFixtures by the
+  // Node runner (see run_panel.js) before this script runs, read straight off
+  // extension/i18n/{en,es}.json — so this bench always reflects the actual
+  // dictionaries, never a hand-copied (and driftable) duplicate.
+
+  window.fetch = async (url, _opts) => {
+    window.__fetchCalls.push({ url, opts: _opts });
+
+    if (url.endsWith("/health")) {
+      return { ok: true, json: async () => ({ status: "ok" }) };
+    }
+    if (url.endsWith("/agent/turn")) {
+      const next = window.__turnQueue.shift();
+      return { ok: true, json: async () => next };
+    }
+    if (url.endsWith("en.json") || url.endsWith("es.json")) {
+      const locale = url.endsWith("en.json") ? "en" : "es";
+      return { ok: true, json: async () => window.__i18nFixtures[locale] };
+    }
+    throw new Error(`unmocked fetch: ${url}`);
+  };
+
+  window.chrome = {
+    i18n: { getUILanguage: () => "es-PE" },
+    storage: {
+      local: {
+        _data: {},
+        get(_keys) {
+          return Promise.resolve(this._data.locale !== undefined ? { locale: this._data.locale } : {});
+        },
+        set(obj) {
+          Object.assign(this._data, obj);
+          return Promise.resolve();
+        },
+      },
+    },
+    runtime: { lastError: null, getURL: (p) => p },
+    tabs: {
+      query(_opts, cb) {
+        cb([{ id: 1 }]);
+      },
+      sendMessage(_tabId, message, cb) {
+        if (message.type === "PING") {
+          cb({ ok: true });
+          return;
+        }
+        if (message.type === "INDEX_PAGE") {
+          cb({ url: "http://x", title: "t", elements: window.__contentState.elements });
+          return;
+        }
+        if (message.type === "EXECUTE_ACTIONS") {
+          window.__contentState.executeActionsCallCount += 1;
+          const results = message.actions.map((a) => {
+            const el = window.__contentState.elements.find((e) => e.ref === a.args.ref);
+            if (!el) return { action_id: a.action_id, ok: false, value: null, error: "ref_not_found" };
+            el.value = a.args.value;
+            return { action_id: a.action_id, ok: true, value: a.args.value, error: null };
+          });
+          cb({ action_results: results });
+          return;
+        }
+      },
+    },
+  };
+
+  if (!window.crypto || !window.crypto.randomUUID) {
+    window.crypto = window.crypto || {};
+    window.crypto.randomUUID = () => "test-uuid-" + Math.random().toString(36).slice(2);
+  }
+</script>
+
+<script src="i18n/index.js"></script>
+<script src="panel.js"></script>
+
+<script>
+  async function wait(ms) {
+    return new Promise((r) => setTimeout(r, ms));
+  }
+
+  function lastRequestBody() {
+    const call = window.__fetchCalls[window.__fetchCalls.length - 1];
+    return JSON.parse(call.opts.body);
+  }
+
+  async function runTests() {
+    const results = [];
+    const check = (name, cond) => results.push({ name, pass: !!cond });
+
+    await wait(50); // let init() finish (initLocale + checkHealth are async)
+
+    const sessionIdBefore = window.__ventanaPanel.getSessionId();
+    check("session id is generated on init", typeof sessionIdBefore === "string" && sessionIdBefore.length > 0);
+
+    // --- Locale switch must not reset the session ---
+    document.getElementById("localeEnBtn").click();
+    await wait(20);
+    check("locale switched to en", getLocale() === "en");
+    check("session id unchanged after locale switch", window.__ventanaPanel.getSessionId() === sessionIdBefore);
+
+    // --- Submitting proposes actions and sends the right request shape ---
+    window.__contentState.elements = [
+      { ref: "e0", tag: "input", type: "text", label: "Nombre", value: "", options: null, required: false },
+    ];
+    window.__turnQueue.push({
+      session_id: sessionIdBefore,
+      status: "awaiting_approval",
+      reply: "found 1",
+      actions: [
+        { action_id: "a1", tool: "fill_field", args: { ref: "e0", value: "Juan" }, needs_approval: true, reason: "r1" },
+      ],
+      trace: [{ step: 1, tool: "read_page", outcome: "ok" }],
+    });
+    document.getElementById("messageInput").value = "fill it";
+    document.getElementById("submitBtn").click();
+    await wait(30);
+
+    check("pendingActions has 1 action after submit", window.__ventanaPanel.getPendingActions().length === 1);
+    const submitBody = lastRequestBody();
+    check("submit sent the same session_id", submitBody.session_id === sessionIdBefore);
+    check("submit sent action_results: null on the first turn", submitBody.action_results === null);
+    check("submit sent the locale currently active (en)", submitBody.locale === "en");
+
+    // --- Approve executes only that action, and reports its result back ---
+    window.__turnQueue.push({
+      session_id: sessionIdBefore,
+      status: "done",
+      reply: "done",
+      actions: [],
+      trace: [{ step: 1, tool: "fill_field", outcome: "ok" }],
+    });
+    const approveBtn = document.querySelector(".action-row button");
+    approveBtn.click();
+    await wait(30);
+
+    check("approving writes the value via the mock content script", window.__contentState.elements[0].value === "Juan");
+    check("pendingActions cleared once nothing more is pending", window.__ventanaPanel.getPendingActions().length === 0);
+    const approveBody = lastRequestBody();
+    check("approve turn reported ok:true for the executed action", approveBody.action_results[0].ok === true);
+
+    // --- Discard never executes, and reports error:"discarded" ---
+    window.__contentState.elements = [
+      { ref: "e1", tag: "input", type: "text", label: "Otro", value: "", options: null, required: false },
+    ];
+    window.__turnQueue.push({
+      session_id: sessionIdBefore,
+      status: "awaiting_approval",
+      reply: "found 1",
+      actions: [
+        { action_id: "a2", tool: "fill_field", args: { ref: "e1", value: "X" }, needs_approval: true, reason: "r2" },
+      ],
+      trace: [{ step: 1, tool: "read_page", outcome: "ok" }],
+    });
+    document.getElementById("messageInput").value = "fill more";
+    document.getElementById("submitBtn").click();
+    await wait(30);
+
+    const execCallsBefore = window.__contentState.executeActionsCallCount;
+    window.__turnQueue.push({
+      session_id: sessionIdBefore,
+      status: "done",
+      reply: "ok",
+      actions: [],
+      trace: [{ step: 1, tool: "fill_field", outcome: "discarded by user" }],
+    });
+    const discardBtn = document.querySelectorAll(".action-row .row-buttons button")[1];
+    discardBtn.click();
+    await wait(30);
+
+    check(
+      "discard never calls EXECUTE_ACTIONS",
+      window.__contentState.executeActionsCallCount === execCallsBefore
+    );
+    const discardBody = lastRequestBody();
+    check(
+      "discard reports ok:false, error:'discarded' — never a fabricated success",
+      discardBody.action_results[0].ok === false && discardBody.action_results[0].error === "discarded"
+    );
+    check("discarded row is removed from pendingActions", window.__ventanaPanel.getPendingActions().length === 0);
+
+    // --- Trace accumulates across turns instead of being replaced ---
+    // 4 turns so far (submit, approve, submit, discard), 1 trace step each.
+    check(
+      "trace log accumulated steps across all turns instead of being replaced",
+      window.__ventanaPanel.getTraceLog().length === 4
+    );
+
+    // --- render ---
+    const el = document.getElementById("results");
+    let failCount = 0;
+    results.forEach((r) => {
+      const line = document.createElement("div");
+      line.className = r.pass ? "pass" : "fail";
+      line.textContent = `${r.pass ? "PASS" : "FAIL"} — ${r.name}`;
+      el.appendChild(line);
+      if (!r.pass) failCount++;
+    });
+    const summary = document.createElement("div");
+    summary.style.marginTop = "12px";
+    summary.className = failCount === 0 ? "pass" : "fail";
+    summary.textContent =
+      failCount === 0 ? `ALL ${results.length} CHECKS PASSED` : `${failCount} of ${results.length} CHECKS FAILED`;
+    el.appendChild(summary);
+  }
+
+  runTests();
+</script>
+</body>
+</html>

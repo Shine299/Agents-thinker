@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Tramite Documentario - Mesa de Partes Virtual</title>
+<style>
+body { font-family: Verdana, Arial, sans-serif; font-size: 12px; background: #d4d0c8; margin: 0; }
+.header { background: #003366; color: white; padding: 8px 12px; font-weight: bold; font-size: 14px; }
+table.layout { border-collapse: collapse; width: 100%; }
+table.form-box { border: 1px solid #999; background: #fff; margin: 10px; }
+td.label { background: #e8e8e8; padding: 4px 6px; border: 1px solid #ccc; white-space: nowrap; }
+td.field { padding: 4px 6px; border: 1px solid #ccc; }
+input, select, textarea { font-family: Verdana, Arial, sans-serif; font-size: 12px; }
+input.invalid { background: #ffcccc; }
+input.valid { background: #ccffcc; }
+.footer-note { font-size: 10px; color: #666; padding: 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">SISTEMA DE TRAMITE DOCUMENTARIO &mdash; MESA DE PARTES VIRTUAL v2.3</div>
+
+<table class="layout">
+<tr><td>
+  <table class="layout">
+  <tr><td>
+    <font size="2" face="Verdana"><b>Registro de Solicitud</b></font>
+    <table class="form-box" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td class="label">Nombre del solicitante</td>
+        <td class="field">
+          <input type="text" id="ctl00_cphMain_txtNomSol" name="ctl00$cphMain$txtNomSol"
+                 onchange="this.className = this.value.length > 2 ? 'valid' : 'invalid'">
+        </td>
+      </tr>
+      <tr>
+        <td class="label">Tipo de documento</td>
+        <td class="field">
+          <select id="ctl00_cphMain_ddlTipoDoc" name="ctl00$cphMain$ddlTipoDoc">
+            <option value="">-- Seleccione --</option>
+            <option value="DNI">DNI</option>
+            <option value="CE">Carnet de Extranjeria</option>
+            <option value="PAS">Pasaporte</option>
+            <option value="RUC">RUC</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">Numero de documento</td>
+        <td class="field">
+          <input type="text" id="ctl00_cphMain_txtNumDoc" name="ctl00$cphMain$txtNumDoc"
+                 placeholder="Ingrese numero"
+                 onchange="this.className = this.value.length >= 8 ? 'valid' : 'invalid'">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table>
+            <tr>
+              <td>Razon social de la empresa</td>
+              <td><input type="text" id="ctl00_cphMain_txtRazonSocial" name="ctl00$cphMain$txtRazonSocial"
+                         onchange="this.className = this.value.length > 2 ? 'valid' : 'invalid'"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">RUC</td>
+        <td class="field">
+          <input type="text" id="ctl00_cphMain_txtRuc" name="ctl00$cphMain$txtRuc"
+                 aria-label="RUC de la empresa"
+                 onchange="this.className = /^[0-9]{11}$/.test(this.value) ? 'valid' : 'invalid'">
+        </td>
+      </tr>
+      <tr>
+        <td class="label">Correo electronico</td>
+        <td class="field">
+          <input type="text" id="ctl00_cphMain_txtEmail" name="ctl00$cphMain$txtEmail"
+                 placeholder="correo@ejemplo.com"
+                 onchange="this.className = this.value.includes('@') ? 'valid' : 'invalid'">
+        </td>
+      </tr>
+      <tr>
+        <td class="label">Telefono de contacto</td>
+        <td class="field">
+          <input type="text" id="ctl00_cphMain_txtTelefono" name="ctl00$cphMain$txtTelefono"
+                 onchange="this.className = this.value.length >= 6 ? 'valid' : 'invalid'">
+        </td>
+      </tr>
+      <tr>
+        <td class="label">Asunto</td>
+        <td class="field">
+          <input type="text" id="ctl00_cphMain_txtAsunto" name="ctl00$cphMain$txtAsunto"
+                 onchange="this.className = this.value.length > 3 ? 'valid' : 'invalid'">
+        </td>
+      </tr>
+      <tr>
+        <td class="label">Dependencia destino</td>
+        <td class="field">
+          <select id="ctl00_cphMain_ddlDependencia" name="ctl00$cphMain$ddlDependencia">
+            <option value="">-- Seleccione --</option>
+            <option value="MP-LEGAL">Mesa de Partes - Asesoria Legal</option>
+            <option value="MP-TESO">Mesa de Partes - Tesoreria</option>
+            <option value="MP-RRHH">Mesa de Partes - Recursos Humanos</option>
+            <option value="MP-LOGIS">Mesa de Partes - Logistica</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">Detalle de la solicitud</td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <textarea id="ctl00_cphMain_txtDetalle" name="ctl00$cphMain$txtDetalle" rows="4" cols="60"
+                    placeholder="Describa el motivo de su tramite"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">Clave SOL (verificacion)</td>
+        <td class="field">
+          <input type="password" id="ctl00_cphMain_txtClaveSol" name="ctl00$cphMain$txtClaveSol">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" align="right">
+          <button type="button" id="ctl00_cphMain_btnLimpiar">Limpiar</button>
+          <button type="button" id="ctl00_cphMain_btnEnviar">Enviar Solicitud</button>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+  </table>
+</td></tr>
+</table>
+
+<table class="layout">
+<tr><td>
+  <font size="2" face="Verdana"><b>Bandeja de Expedientes</b></font>
+  <table class="form-box" cellpadding="3" cellspacing="0" border="1" id="ctl00_cphMain_gvExpedientes">
+    <tr bgcolor="#003366" style="color:white;">
+      <td>N&deg; Expediente</td><td>Solicitante</td><td>Dependencia</td><td>Estado</td><td>Fecha</td>
+    </tr>
+    <tr><td>2026-000112</td><td>Grupo Andino SAC</td><td>MP-LEGAL</td><td>En proceso</td><td>2026-09-01</td></tr>
+    <tr><td>2026-000113</td><td>Juan Perez Quispe</td><td>MP-RRHH</td><td>Observado</td><td>2026-09-02</td></tr>
+    <tr><td>2026-000114</td><td>Constructora Sur EIRL</td><td>MP-LOGIS</td><td>Atendido</td><td>2026-09-03</td></tr>
+    <tr><td>2026-000115</td><td>Maria Torres Vega</td><td>MP-TESO</td><td>En proceso</td><td>2026-09-03</td></tr>
+    <tr><td>2026-000116</td><td>Grupo Andino SAC</td><td>MP-LEGAL</td><td>Atendido</td><td>2026-09-04</td></tr>
+    <tr><td>2026-000117</td><td>Luis Ramirez Diaz</td><td>MP-RRHH</td><td>Pendiente</td><td>2026-09-04</td></tr>
+    <tr><td>2026-000118</td><td>Textiles del Pacifico SA</td><td>MP-LOGIS</td><td>En proceso</td><td>2026-09-05</td></tr>
+    <tr><td>2026-000119</td><td>Ana Flores Castro</td><td>MP-TESO</td><td>Atendido</td><td>2026-09-05</td></tr>
+    <tr><td>2026-000120</td><td>Constructora Sur EIRL</td><td>MP-LOGIS</td><td>Observado</td><td>2026-09-06</td></tr>
+    <tr><td>2026-000121</td><td>Pedro Salazar Rios</td><td>MP-LEGAL</td><td>Pendiente</td><td>2026-09-06</td></tr>
+    <tr><td>2026-000122</td><td>Grupo Andino SAC</td><td>MP-RRHH</td><td>En proceso</td><td>2026-09-07</td></tr>
+    <tr><td>2026-000123</td><td>Carmen Huaman Ibarra</td><td>MP-TESO</td><td>Atendido</td><td>2026-09-07</td></tr>
+  </table>
+</td></tr>
+</table>
+
+<div class="footer-note">Sistema desarrollado en 2009. No modificar la estructura de tablas. Soporte: mesadepartes@entidad-demo.gob.pe</div>
+
+</body>
+</html>

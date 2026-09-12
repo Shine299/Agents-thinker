@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+openai-agents
+exa_py
+pydantic
+python-dotenv
+pytest
+httpx
+# openai-agents uses 3.10+ type syntax internally; this backports the
+# evaluation so it also imports on Python 3.9. Harmless on 3.11+.
+eval_type_backport

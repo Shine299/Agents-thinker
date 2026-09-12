@@ -1,0 +1,38 @@
+De: gerencia@grupoandino-sac.com.pe
+Para: mesadepartes@entidad-demo.gob.pe
+Asunto: Solicitud de renovacion de licencia de funcionamiento
+
+Estimados senores:
+
+Por medio de la presente, quien suscribe, Juan Perez Quispe, identificado con
+DNI numero 45789231, en representacion de la empresa GRUPO ANDINO SAC, con
+RUC 20456789123, solicito formalmente la renovacion de la licencia de
+funcionamiento correspondiente al periodo 2026-2027.
+
+Los datos de contacto para el seguimiento de este tramite son:
+
+  Correo electronico: jperez@grupoandino-sac.com.pe
+  Telefono: 987654321
+
+El presente tramite debe dirigirse a la Mesa de Partes de Asesoria Legal,
+dado que involucra la verificacion de vigencia societaria de la empresa.
+
+Detalle de la solicitud: Renovacion de licencia de funcionamiento por
+vencimiento del periodo anterior (venció el 31 de agosto). Se adjunta
+copia de RUC y vigencia de poder del representante legal.
+
+Quedo atento a cualquier observacion.
+
+Atentamente,
+Juan Perez Quispe
+Gerente General - GRUPO ANDINO SAC
+
+---
+Notas para el caso de demo (no forman parte del correo, uso interno del equipo):
+- Dato verificable via Exa (Sprint-02, verify_entity): existencia real de "GRUPO ANDINO SAC" / RUC 20456789123.
+- Dato que requiere transformacion (Sprint-02): "vencio el 31 de agosto" -> no hay campo de fecha en el
+  formulario; se espera que el agente lo incorpore en el campo "Detalle de la solicitud", no que invente un
+  campo nuevo.
+- Campos mapeables directamente en Sprint-01/02: nombre del solicitante, tipo de documento (DNI), numero de
+  documento, razon social, RUC, correo, telefono, asunto, dependencia destino (MP-LEGAL), detalle.
+- El campo "Clave SOL" nunca se llena: no aparece en el indice (input[type=password] excluido).
