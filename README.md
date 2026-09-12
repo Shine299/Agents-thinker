@@ -1,4 +1,4 @@
-# Ventana
+# Wicket AI
 
 **The agent that works inside the tab you already have open.**
 
