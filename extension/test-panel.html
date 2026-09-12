@@ -247,6 +247,17 @@
       window.__ventanaPanel.getTraceLog().length === 4
     );
 
+    // --- renderFormattedText: model replies are plain-ish markdown, never
+    // trusted as HTML. Line breaks must survive and **bold** must render as
+    // a real <strong>, not a literal asterisk (the bug this fixes). ---
+    const probe = document.createElement("div");
+    window.__ventanaPanel.renderFormattedText(probe, "line one\n**Nombre**: line two");
+    check("renderFormattedText turns a newline into a <br>", probe.querySelectorAll("br").length === 1);
+    const strongEls = probe.querySelectorAll("strong");
+    check("renderFormattedText turns **x** into one <strong>", strongEls.length === 1 && strongEls[0].textContent === "Nombre");
+    check("renderFormattedText never leaves literal ** in the text", !probe.textContent.includes("*"));
+    check("renderFormattedText builds nodes, not innerHTML parsing of the input", probe.querySelector("script") === null);
+
     // --- render ---
     const el = document.getElementById("results");
     let failCount = 0;

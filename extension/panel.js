@@ -82,9 +82,30 @@ async function postTurn(body) {
   return response.json();
 }
 
+// The model writes plain-ish markdown (line breaks, **bold**). Rendered with
+// a bare textContent, line breaks collapse and "**" shows up literally —
+// exactly the unreadable wall of text this fixes. Builds real DOM nodes
+// instead of innerHTML: model output is never trusted as markup.
+function renderFormattedText(el, text) {
+  el.textContent = "";
+  const lines = (text || "").split("\n");
+  lines.forEach((line, i) => {
+    if (i > 0) el.appendChild(document.createElement("br"));
+    for (const part of line.split(/(\*\*[^*]+\*\*)/g)) {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        const strong = document.createElement("strong");
+        strong.textContent = part.slice(2, -2);
+        el.appendChild(strong);
+      } else if (part) {
+        el.appendChild(document.createTextNode(part));
+      }
+    }
+  });
+}
+
 function renderReply(text, isError) {
   const el = document.getElementById("replyArea");
-  el.textContent = text || "";
+  renderFormattedText(el, text || "");
   el.className = isError ? "error" : "ok";
 }
 
@@ -106,7 +127,7 @@ function renderActions() {
 
     const reason = document.createElement("div");
     reason.className = "reason";
-    reason.textContent = action.reason;
+    renderFormattedText(reason, action.reason);
     row.appendChild(reason);
 
     const buttons = document.createElement("div");
@@ -300,6 +321,7 @@ if (typeof window !== "undefined") {
     getSessionId: () => sessionId,
     getPendingActions: () => pendingActions,
     getTraceLog: () => traceLog,
+    renderFormattedText,
   };
 }
 
