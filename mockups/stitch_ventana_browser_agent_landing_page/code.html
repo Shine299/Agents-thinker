@@ -1,0 +1,409 @@
+<!DOCTYPE html><html lang="en" style="width: 100% !important; min-height: 100% !important; height: auto !important; overflow-y: auto !important; overflow-x: hidden !important; opacity: 1 !important; visibility: visible !important; background-color: #ffffff !important; margin: 0; padding: 0;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Ventana — The Agent Inside Your Browser</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-highest": "#dfe2eb",
+            "tertiary": "#7f2500",
+            "secondary-fixed-dim": "#c6c6cd",
+            "on-surface-variant": "#434655",
+            "inverse-primary": "#b7c4ff",
+            "surface-container-low": "#f1f3fc",
+            "surface-variant": "#dfe2eb",
+            "surface-container-high": "#e5e8f0",
+            "on-primary-fixed-variant": "#0039b5",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary": "#ffffff",
+            "primary-fixed-dim": "#b7c4ff",
+            "background": "#f8f9ff",
+            "on-surface": "#181c22",
+            "secondary-container": "#dfdfe6",
+            "on-secondary-fixed": "#1a1b21",
+            "surface-bright": "#f8f9ff",
+            "tertiary-fixed-dim": "#ffb59c",
+            "secondary-fixed": "#e2e2e9",
+            "on-background": "#181c22",
+            "tertiary-fixed": "#ffdbcf",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-fixed": "#390c00",
+            "primary-fixed": "#dce1ff",
+            "inverse-on-surface": "#eef1f9",
+            "on-primary-fixed": "#001551",
+            "surface": "#f8f9ff",
+            "surface-tint": "#2151da",
+            "secondary": "#5d5e64",
+            "on-secondary-fixed-variant": "#45474c",
+            "error": "#ba1a1a",
+            "tertiary-container": "#a73400",
+            "outline-variant": "#c4c5d7",
+            "primary-container": "#1d4ed8",
+            "error-container": "#ffdad6",
+            "primary": "#1d4ed8",
+            "inverse-surface": "#2d3137",
+            "outline": "#747686",
+            "on-primary-container": "#cad3ff",
+            "on-secondary-container": "#616268",
+            "surface-container": "#ebeef6",
+            "surface-dim": "#d7dae2",
+            "on-primary": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#ffc9b7",
+            "on-tertiary-fixed-variant": "#832700",
+            "on-error": "#ffffff"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "gutter": "2rem",
+            "gutter-mobile": "1.25rem",
+            "margin": "3rem",
+            "margin-mobile": "1.25rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem",
+            "space-2xl": "4rem",
+            "space-3xl": "6rem"
+          },
+          fontFamily: {
+            "sans": ["Plus Jakarta Sans", "Inter", "system-ui", "sans-serif"],
+            "headline-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-md": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "display": ["Plus Jakarta Sans", "sans-serif"],
+            "body-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "code-sm": ["JetBrains Mono", "monospace"],
+            "code-md": ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    html, body {
+      width: 100% !important;
+      min-height: 100% !important;
+      height: auto !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      background-color: #ffffff !important;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest font-body-md text-body-md text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed" style="width: 100% !important; min-height: 100% !important; height: auto !important; overflow-y: auto !important; overflow-x: hidden !important; opacity: 1 !important; visibility: visible !important; background-color: #ffffff !important; margin: 0; padding: 0;">
+<!-- Sticky / Top Navigation Bar -->
+<header class="sticky top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-surface-container-high">
+<div class="h-16 max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter flex items-center justify-between">
+<div class="flex items-center gap-space-lg">
+<a class="flex items-center gap-space-sm group focus:outline-none" href="#">
+<span class="w-6 h-6 rounded border border-on-surface/20 flex items-center justify-center bg-surface-container-low text-primary font-headline-sm font-bold leading-none text-xs">W</span>
+<span class="font-headline-sm text-base font-bold tracking-tight text-on-surface group-hover:text-primary transition-colors">Wicket</span>
+</a>
+<nav class="hidden md:flex items-center gap-space-lg ml-space-md">
+<a class="text-sm font-semibold text-primary" href="#">Overview</a>
+<a class="text-sm font-normal text-on-surface-variant hover:text-on-surface transition-colors" href="#">How it works</a>
+<a class="text-sm font-normal text-on-surface-variant hover:text-on-surface transition-colors" href="#">Trust</a>
+<a class="text-sm font-normal text-on-surface-variant hover:text-on-surface transition-colors" href="#demo">Demo</a>
+</nav>
+</div>
+<div class="flex items-center gap-space-md">
+<a class="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-lg border border-surface-container-high bg-surface-container-lowest text-on-surface text-sm font-semibold hover:bg-surface-container-low hover:border-outline-variant transition-all" href="#demo">Watch demo</a>
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[18px]">person</span>
+</div>
+</div>
+</div>
+</header>
+<main class="w-full bg-surface-container-lowest">
+<div class="flex flex-col w-full bg-surface-container-lowest text-on-surface">
+<!-- SECTION 1: Hero -->
+<section class="w-full pt-12 md:pt-16 pb-20 px-gutter-mobile lg:px-gutter">
+<div class="max-w-[820px] mx-auto text-center flex flex-col items-center">
+<div class="text-center mb-5"><span class="font-headline-sm text-lg font-bold tracking-tight text-on-surface block">Wicket</span><span class="font-body-sm text-xs text-secondary block mt-0.5">the counter window where paperwork gets done</span></div><h1 class="font-headline-lg text-3xl sm:text-4xl md:text-[54px] md:leading-[62px] text-on-surface font-extrabold tracking-tight max-w-[760px]">
+            The agent that works inside the tab you already have open.
+          </h1>
+<p class="font-body-lg text-base sm:text-lg text-secondary max-w-[620px] mt-4">Wicket reads and fills legacy forms with no API — with a human approving every action that changes anything.</p>
+<div class="mt-8">
+<a class="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-lg bg-primary text-white text-sm sm:text-base font-semibold hover:bg-blue-700 transition-all active:scale-[0.98] shadow-sm" href="#demo">
+              Watch the demo
+            </a>
+</div>
+<!-- Browser Mockup -->
+<div class="w-full max-w-[780px] mt-12 rounded-xl border border-surface-container-high bg-surface-container-low shadow-sm overflow-hidden text-left">
+<!-- Browser Chrome -->
+<div class="h-11 px-4 flex items-center gap-3 border-b border-surface-container-high bg-surface-container-low select-none">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant/60 inline-block"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant/60 inline-block"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-outline-variant/60 inline-block"></span>
+</div>
+<div class="flex-1 max-w-[420px] mx-auto h-7 px-3 rounded-md bg-surface-container-lowest border border-surface-container-high flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[14px]">lock</span>
+<span class="font-code-sm text-xs text-secondary truncate">intranet.gov.local/dept-filing/form-882</span>
+</div>
+<div class="hidden sm:flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-code-sm text-xs text-secondary">Ready</span>
+</div>
+</div>
+<!-- Inside Browser Window: Form + Docked Side Panel -->
+<div class="bg-surface-container-lowest grid grid-cols-1 md:grid-cols-12 min-h-[380px]">
+<!-- Legacy Form (Left) -->
+<div class="p-6 md:p-8 md:col-span-7 border-b md:border-b-0 md:border-r border-surface-container-high flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-surface-container-high mb-5">
+<span class="font-code-md text-xs font-semibold text-secondary uppercase tracking-wider">Dept. Revenue · System 4A</span>
+<span class="font-code-sm text-xs text-outline">Session #882-K</span>
+</div>
+<div class="space-y-3.5">
+<div>
+<label class="block font-code-sm text-xs text-secondary mb-1">Applicant ID</label>
+<input class="w-full h-8 px-2.5 rounded bg-surface-container-low border border-surface-container-high font-code-sm text-xs text-on-surface select-none pointer-events-none" readonly="" type="text" value="APP-2026-99042">
+</div>
+<!-- Sole Highlighted Active Blue Field -->
+<div>
+<div class="flex items-center justify-between mb-1">
+<label class="block font-code-sm text-xs text-on-surface font-semibold">Tax</label>
+<span class="font-code-sm text-xs text-secondary font-medium">Proposed</span>
+</div>
+<input class="w-full h-8 px-2.5 rounded bg-surface-container-lowest border border-primary ring-1 ring-primary font-code-sm text-xs text-on-surface font-semibold" readonly="" type="text" value="Form 1040-NR">
+</div>
+<div>
+<label class="block font-code-sm text-xs text-secondary mb-1">Case Reference</label>
+<input class="w-full h-8 px-2.5 rounded bg-surface-container-low border border-surface-container-high font-code-sm text-xs text-secondary select-none pointer-events-none" readonly="" type="text" value="CRF-LMA-081">
+</div>
+<div class="grid grid-cols-2 gap-2.5">
+<div>
+<label class="block font-code-sm text-xs text-secondary mb-1">Filing Region</label>
+<input class="w-full h-8 px-2.5 rounded bg-surface-container-low border border-surface-container-high font-code-sm text-xs text-secondary select-none pointer-events-none" readonly="" type="text" value="04-Andean">
+</div>
+<div>
+<label class="block font-code-sm text-xs text-secondary mb-1">Routing Code</label>
+<input class="w-full h-8 px-2.5 rounded bg-surface-container-low border border-surface-container-high font-code-sm text-xs text-secondary select-none pointer-events-none" readonly="" type="text" value="RT-770">
+</div>
+</div>
+</div>
+</div>
+<div class="pt-4 mt-6 border-t border-surface-container-high flex items-center justify-between">
+<span class="font-code-sm text-xs text-outline">Elements mapped: 5/5</span>
+<button class="h-7 px-3 rounded bg-surface-container-high text-secondary font-body-sm text-xs cursor-not-allowed" disabled="">Submit disabled</button>
+</div>
+</div>
+<!-- Docked Side Panel (Right) -->
+<div class="p-6 md:col-span-5 bg-surface-container-low flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-surface-container-high">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-headline-sm text-sm font-semibold text-on-surface">Wicket Assistant</span>
+</div>
+<span class="font-code-sm text-xs text-secondary">Step 2 of 5</span>
+</div>
+<!-- Proposal Card -->
+<div class="mt-4 p-3.5 rounded-lg bg-surface-container-lowest border border-surface-container-high shadow-sm">
+<span class="font-code-sm text-[11px] text-secondary uppercase tracking-wider block">Field suggestion</span>
+<p class="font-headline-sm text-sm font-semibold text-on-surface mt-1">Proposed: Form 1040-NR</p>
+<p class="font-body-sm text-xs text-secondary mt-1.5 leading-snug">
+                      Confidence 98% · Source: Email snippet
+                    </p>
+<div class="mt-4 pt-3 border-t border-surface-container-high">
+<div class="w-full min-h-[36px] py-1.5 px-3 rounded-md border border-surface-container-high bg-surface-container-lowest text-secondary font-body-sm text-xs font-medium flex items-center justify-center gap-1.5 cursor-default select-none">
+<span class="">Awaiting human confirmation</span>
+</div>
+</div>
+</div>
+<div class="mt-3 p-2.5 rounded-md bg-surface-container-lowest/60 border border-surface-container-high text-left">
+<span class="font-code-sm text-[11px] text-outline block">Reasoning log</span>
+<span class="font-code-sm text-xs text-secondary block mt-0.5">Non-resident status verified from passport residency header.</span>
+</div>
+</div>
+<div class="pt-3 border-t border-surface-container-high/60 mt-4">
+<span class="font-code-sm text-xs text-secondary block">Human in the loop: active</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: Problem -> Thesis -->
+<section class="w-full py-20 px-gutter-mobile lg:px-gutter bg-surface-container-lowest">
+<div class="max-w-[760px] mx-auto text-center">
+<p class="font-body-md text-base text-[#5B5F66]">
+            Government filing desks. University intranets. 15-year-old ERPs. No API, and never will be.
+          </p>
+<h2 class="font-headline-lg text-3xl sm:text-4xl md:text-[44px] md:leading-[52px] text-[#16181D] font-bold tracking-tight mt-4">
+            When there is no API, <span class="text-[#1D4ED8]">the browser is the API.</span>
+</h2>
+</div>
+</section>
+<!-- SECTION 3: How it works -->
+<section class="w-full py-20 px-gutter-mobile lg:px-gutter bg-surface-container-lowest">
+<div class="max-w-[860px] mx-auto">
+<div class="text-center">
+<h2 class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
+              A compact index, not the raw page.
+            </h2>
+<p class="font-body-md text-base text-secondary mt-3 max-w-[540px] mx-auto">
+              We never send the HTML to the model — we send a short list of the elements that matter.
+            </p>
+</div>
+<div class="mt-16 flex flex-col md:flex-row items-start justify-between gap-8 relative">
+<div class="flex-1 w-full text-left">
+<span class="font-code-sm text-xs text-[#5B5F66] block">01</span>
+<h3 class="font-headline-sm text-xl text-[#16181D] font-bold mt-1">Index</h3>
+<p class="font-body-sm text-sm text-secondary mt-2 leading-relaxed">
+                The page becomes a list of at most 150 elements, each with a stable reference.
+              </p>
+</div>
+<div aria-hidden="true" class="hidden md:flex items-center justify-center pt-8 text-[#1D4ED8] flex-shrink-0">
+<svg class="w-6 h-6 stroke-[#1D4ED8]" fill="none" stroke-width="1.5" viewBox="0 0 24 24">
+<path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex-1 w-full text-left">
+<span class="font-code-sm text-xs text-[#5B5F66] block">02</span>
+<h3 class="font-headline-sm text-xl text-[#16181D] font-bold mt-1">Reason</h3>
+<p class="font-body-sm text-sm text-secondary mt-2 leading-relaxed">
+                The agent proposes a value for each field, citing its reasoning.
+              </p>
+</div>
+<div aria-hidden="true" class="hidden md:flex items-center justify-center pt-8 text-[#1D4ED8] flex-shrink-0">
+<svg class="w-6 h-6 stroke-[#1D4ED8]" fill="none" stroke-width="1.5" viewBox="0 0 24 24">
+<path d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex-1 w-full text-left">
+<span class="font-code-sm text-xs text-[#5B5F66] block">03</span>
+<h3 class="font-headline-sm text-xl text-[#16181D] font-bold mt-1">Approve</h3>
+<p class="font-body-sm text-sm text-secondary mt-2 leading-relaxed">
+                A person reviews and approves before anything is written.
+              </p>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 4: What it does -->
+<section class="w-full py-20 px-gutter-mobile lg:px-gutter bg-surface-container-lowest">
+<div class="max-w-[780px] mx-auto">
+<div class="text-center mb-12">
+<h2 class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
+              One agent, three flows.
+            </h2>
+</div>
+<!-- 3 Stacked Rows -->
+<div class="w-full flex flex-col">
+<!-- Row 1 -->
+<div class="border-t border-surface-container-high py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 sm:gap-8">
+<div class="sm:w-1/3 flex items-center gap-2.5 flex-shrink-0">
+<span class="font-headline-sm text-base font-semibold text-on-surface">Assisted form filling</span>
+<span class="font-code-sm text-xs px-2 py-0.5 rounded bg-primary-fixed text-primary font-medium">live</span>
+</div>
+<div class="sm:w-2/3">
+<p class="font-body-sm text-sm text-secondary leading-relaxed">
+                  Extracts data from a pasted email, maps it to the form on screen, proposes it field by field.
+                </p>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="border-t border-surface-container-high py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 sm:gap-8">
+<div class="sm:w-1/3 flex items-center gap-2.5 flex-shrink-0">
+<span class="font-headline-sm text-base font-semibold text-on-surface">Table reading</span>
+<span class="font-code-sm text-xs text-secondary px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">later</span>
+</div>
+<div class="sm:w-2/3">
+<p class="font-body-sm text-sm text-secondary leading-relaxed">
+                  Answers questions about a case tray extracted from the page.
+                </p>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="border-t border-b border-surface-container-high py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 sm:gap-8">
+<div class="sm:w-1/3 flex items-center gap-2.5 flex-shrink-0">
+<span class="font-headline-sm text-base font-semibold text-on-surface">Pre-submission review</span>
+<span class="font-code-sm text-xs text-secondary px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">later</span>
+</div>
+<div class="sm:w-2/3">
+<p class="font-body-sm text-sm text-secondary leading-relaxed">
+                  Flags empty fields and inconsistencies before the system rejects them.
+                </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5: Trust Principle -->
+<section class="w-full my-12 px-gutter-mobile lg:px-gutter">
+<div class="max-w-[896px] mx-auto rounded-2xl bg-surface-container-low border border-surface-container-high py-16 px-8 text-center">
+<h2 class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-[#16181D] font-bold tracking-tight">
+            The agent never submits.
+          </h2>
+<p class="font-body-md text-base text-[#5B5F66] max-w-xl mx-auto mt-4 leading-relaxed">
+            It reads, it proposes, it writes fields after approval — but a person presses submit. The submit tool isn't disabled. It isn't implemented.
+          </p>
+</div>
+</section>
+<!-- SECTION 6: Closing / Demo CTA -->
+<section class="w-full pt-12 pb-20 px-gutter-mobile lg:px-gutter bg-surface-container-lowest text-center" id="demo">
+<div class="max-w-[640px] mx-auto">
+<h2 class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
+            See it fill a real form.
+          </h2>
+<div class="mt-6">
+<a class="inline-flex items-center justify-center min-h-[44px] px-8 py-3.5 rounded-lg bg-primary text-white text-base font-semibold hover:bg-blue-700 transition-all active:scale-[0.98] shadow-sm" href="#demo">
+              Watch the 2-minute demo
+            </a>
+</div>
+</div>
+<!-- Divider & Monospace Tagline -->
+<div class="max-w-[672px] mx-auto border-t border-surface-container-high mt-16 pt-8 text-center">
+<p class="font-code-sm text-xs text-secondary tracking-tight">Wicket — built in 4h15 for Agents, Everywhere, AI Tinkerers Lima · Sept 12 2026</p>
+<div class="mt-4 flex items-center justify-center gap-6">
+<a class="font-body-sm text-sm text-secondary hover:text-on-surface hover:underline transition-colors" href="#">GitHub</a>
+<span aria-hidden="true" class="text-surface-container-high select-none">·</span>
+<a class="font-body-sm text-sm text-secondary hover:text-on-surface hover:underline transition-colors" href="#">Architecture</a>
+<span aria-hidden="true" class="text-surface-container-high select-none">·</span>
+<a class="font-body-sm text-sm text-secondary hover:text-on-surface hover:underline transition-colors" href="#">Demo video</a>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-surface-container-lowest border-t border-surface-container-high py-8">
+<div class="max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-base font-bold tracking-tight text-on-surface">Wicket</span>
+<span class="font-code-sm text-xs text-on-surface-variant ml-2">© 2025 Wicket Inc.</span>
+</div>
+<div class="flex items-center gap-6">
+<a class="font-body-sm text-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Privacy</a>
+<a class="font-body-sm text-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Terms</a>
+<a class="font-body-sm text-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Security</a>
+</div>
+</div>
+</footer>
+
+
+</body></html>
