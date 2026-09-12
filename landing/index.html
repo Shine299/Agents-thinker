@@ -73,6 +73,7 @@
 <style>
   html, body { background-color: #ffffff; }
   a:focus-visible, button:focus-visible { outline: 2px solid #1D4ED8; outline-offset: 2px; }
+  #lang-en, #lang-es { cursor: pointer; }
 </style>
 </head>
 <body class="bg-white font-body-md text-body-md text-on-surface antialiased selection:bg-primary-fixed">
@@ -84,14 +85,19 @@
 <span class="font-headline-sm text-base font-bold tracking-tight text-on-surface hover:text-primary transition-colors">Wicket</span>
 </a>
 <nav class="flex flex-wrap items-center gap-3 md:gap-space-lg ml-0 md:ml-space-md">
-<a class="text-xs md:text-sm font-semibold text-primary" href="#overview">Overview</a>
-<a class="text-xs md:text-sm font-normal text-on-surface-variant hover:text-on-surface transition-colors" href="#how-it-works">How it works</a>
-<a class="text-xs md:text-sm font-normal text-on-surface-variant hover:text-on-surface transition-colors" href="#trust">Trust</a>
-<a class="text-xs md:text-sm font-normal text-on-surface-variant hover:text-on-surface transition-colors" href="#demo">Demo</a>
+<a id="nav-overview" class="text-xs md:text-sm font-semibold text-primary" href="#overview">Overview</a>
+<a id="nav-how" class="text-xs md:text-sm font-normal text-on-surface-variant hover:text-on-surface transition-colors" href="#how-it-works">How it works</a>
+<a id="nav-trust" class="text-xs md:text-sm font-normal text-on-surface-variant hover:text-on-surface transition-colors" href="#trust">Trust</a>
+<a id="nav-demo" class="text-xs md:text-sm font-normal text-on-surface-variant hover:text-on-surface transition-colors" href="#demo">Demo</a>
 </nav>
 </div>
-<div class="flex items-center gap-space-md">
-<a class="inline-flex items-center justify-center px-4 py-1.5 rounded-lg border border-surface-container-high bg-white text-on-surface text-sm font-semibold hover:bg-surface-container-low hover:border-outline-variant transition-all" href="#demo">Watch demo</a>
+<div class="flex items-center gap-space-sm sm:gap-space-md">
+<!-- Language toggle: EN default, ES optional. Preference is remembered per browser. -->
+<div class="flex items-center gap-0.5 rounded-lg border border-surface-container-high p-0.5" role="group" aria-label="Language / Idioma">
+<button id="lang-en" type="button" class="px-2 py-1 rounded-md text-xs font-semibold transition-colors bg-primary text-white" aria-pressed="true">EN</button>
+<button id="lang-es" type="button" class="px-2 py-1 rounded-md text-xs font-semibold transition-colors text-secondary hover:text-on-surface" aria-pressed="false">ES</button>
+</div>
+<a id="nav-watch" class="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-lg border border-surface-container-high bg-white text-on-surface text-sm font-semibold hover:bg-surface-container-low hover:border-outline-variant transition-all" href="#demo">Watch demo</a>
 </div>
 </div>
 </header>
@@ -103,15 +109,15 @@
 <div class="max-w-[820px] mx-auto text-center flex flex-col items-center">
 <div class="text-center mb-5">
 <span class="font-headline-sm text-lg font-bold tracking-tight text-on-surface block">Wicket</span>
-<span class="font-body-sm text-xs text-secondary block mt-0.5">the counter window where paperwork gets done</span>
+<span id="hero-eyebrow-sub" class="font-body-sm text-xs text-secondary block mt-0.5">the counter window where paperwork gets done</span>
 </div>
-<h1 class="font-headline-lg text-3xl sm:text-4xl md:text-[54px] md:leading-[62px] text-on-surface font-extrabold tracking-tight max-w-[760px]">
+<h1 id="hero-title" class="font-headline-lg text-3xl sm:text-4xl md:text-[54px] md:leading-[62px] text-on-surface font-extrabold tracking-tight max-w-[760px]">
   The agent that works inside the tab you already have open.
 </h1>
-<p class="font-body-lg text-base sm:text-lg text-secondary max-w-[620px] mt-4">Wicket reads and fills legacy forms with no API — with a human approving every action that changes anything.</p>
+<p id="hero-subtitle" class="font-body-lg text-base sm:text-lg text-secondary max-w-[620px] mt-4">Wicket reads and fills legacy forms with no API — with a human approving every action that changes anything.</p>
 <div class="mt-8">
 <!-- TODO: point to the real demo video once recorded -->
-<a class="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-lg bg-primary text-white text-sm sm:text-base font-semibold hover:bg-blue-700 transition-all active:scale-[0.98] shadow-sm" href="#demo">
+<a id="hero-cta" class="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-lg bg-primary text-white text-sm sm:text-base font-semibold hover:bg-blue-700 transition-all active:scale-[0.98] shadow-sm" href="#demo">
   Watch the demo
 </a>
 </div>
@@ -130,7 +136,7 @@
 </div>
 <div class="hidden sm:flex items-center gap-1">
 <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-<span class="font-code-sm text-xs text-secondary">Ready</span>
+<span id="mock-status" class="font-code-sm text-xs text-secondary">Ready</span>
 </div>
 </div>
 <div class="bg-white grid grid-cols-1 md:grid-cols-12 min-h-[380px]">
@@ -138,40 +144,40 @@
 <div class="p-6 md:p-8 md:col-span-7 border-b md:border-b-0 md:border-r border-surface-container-high flex flex-col justify-between">
 <div>
 <div class="flex items-center justify-between pb-3 border-b border-surface-container-high mb-5">
-<span class="font-code-md text-xs font-semibold text-secondary uppercase tracking-wider">Dept. Revenue · System 4A</span>
-<span class="font-code-sm text-xs text-outline">Session #882-K</span>
+<span id="mock-dept" class="font-code-md text-xs font-semibold text-secondary uppercase tracking-wider">Dept. Revenue · System 4A</span>
+<span id="mock-session" class="font-code-sm text-xs text-outline">Session #882-K</span>
 </div>
 <div class="space-y-3.5">
 <div>
-<label class="block font-code-sm text-xs text-secondary mb-1">Applicant ID</label>
+<label id="mock-label-applicant" class="block font-code-sm text-xs text-secondary mb-1">Applicant ID</label>
 <input class="w-full h-8 px-2.5 rounded bg-surface-container-low border border-surface-container-high font-code-sm text-xs text-on-surface select-none pointer-events-none" readonly="" type="text" value="APP-2026-99042">
 </div>
 <div>
 <div class="flex items-center justify-between mb-1">
-<label class="block font-code-sm text-xs text-on-surface font-semibold">Tax</label>
-<span class="font-code-sm text-xs text-secondary font-medium">Proposed</span>
+<label id="mock-label-tax" class="block font-code-sm text-xs text-on-surface font-semibold">Tax</label>
+<span id="mock-proposed" class="font-code-sm text-xs text-secondary font-medium">Proposed</span>
 </div>
 <input class="w-full h-8 px-2.5 rounded bg-white border border-primary ring-1 ring-primary font-code-sm text-xs text-on-surface font-semibold" readonly="" type="text" value="Form 1040-NR">
 </div>
 <div>
-<label class="block font-code-sm text-xs text-secondary mb-1">Case Reference</label>
+<label id="mock-label-case" class="block font-code-sm text-xs text-secondary mb-1">Case Reference</label>
 <input class="w-full h-8 px-2.5 rounded bg-surface-container-low border border-surface-container-high font-code-sm text-xs text-secondary select-none pointer-events-none" readonly="" type="text" value="CRF-LMA-081">
 </div>
 <div class="grid grid-cols-2 gap-2.5">
 <div>
-<label class="block font-code-sm text-xs text-secondary mb-1">Filing Region</label>
+<label id="mock-label-region" class="block font-code-sm text-xs text-secondary mb-1">Filing Region</label>
 <input class="w-full h-8 px-2.5 rounded bg-surface-container-low border border-surface-container-high font-code-sm text-xs text-secondary select-none pointer-events-none" readonly="" type="text" value="04-Andean">
 </div>
 <div>
-<label class="block font-code-sm text-xs text-secondary mb-1">Routing Code</label>
+<label id="mock-label-routing" class="block font-code-sm text-xs text-secondary mb-1">Routing Code</label>
 <input class="w-full h-8 px-2.5 rounded bg-surface-container-low border border-surface-container-high font-code-sm text-xs text-secondary select-none pointer-events-none" readonly="" type="text" value="RT-770">
 </div>
 </div>
 </div>
 </div>
 <div class="pt-4 mt-6 border-t border-surface-container-high flex items-center justify-between">
-<span class="font-code-sm text-xs text-outline">Elements mapped: 5/5</span>
-<button class="h-7 px-3 rounded bg-surface-container-high text-secondary font-body-sm text-xs cursor-not-allowed" disabled="" aria-label="Submit is intentionally not implemented">Submit disabled</button>
+<span id="mock-elements-mapped" class="font-code-sm text-xs text-outline">Elements mapped: 5/5</span>
+<button id="mock-submit-disabled" class="h-7 px-3 rounded bg-surface-container-high text-secondary font-body-sm text-xs cursor-not-allowed" disabled="" aria-label="Submit is intentionally not implemented">Submit disabled</button>
 </div>
 </div>
 <!-- Docked Side Panel (Right) -->
@@ -180,29 +186,29 @@
 <div class="flex items-center justify-between pb-3 border-b border-surface-container-high">
 <div class="flex items-center gap-1.5">
 <span class="w-2 h-2 rounded-full bg-secondary"></span>
-<span class="font-headline-sm text-sm font-semibold text-on-surface">Wicket Assistant</span>
+<span id="mock-assistant-name" class="font-headline-sm text-sm font-semibold text-on-surface">Wicket Assistant</span>
 </div>
-<span class="font-code-sm text-xs text-secondary">Step 2 of 5</span>
+<span id="mock-step" class="font-code-sm text-xs text-secondary">Step 2 of 5</span>
 </div>
 <div class="mt-4 p-3.5 rounded-lg bg-white border border-surface-container-high shadow-sm">
-<span class="font-code-sm text-[11px] text-secondary uppercase tracking-wider block">Field suggestion</span>
-<p class="font-headline-sm text-sm font-semibold text-on-surface mt-1">Proposed: Form 1040-NR</p>
-<p class="font-body-sm text-xs text-secondary mt-1.5 leading-snug">
+<span id="mock-field-suggestion" class="font-code-sm text-[11px] text-secondary uppercase tracking-wider block">Field suggestion</span>
+<p id="mock-proposed-value" class="font-headline-sm text-sm font-semibold text-on-surface mt-1">Proposed: Form 1040-NR</p>
+<p id="mock-confidence" class="font-body-sm text-xs text-secondary mt-1.5 leading-snug">
   Confidence 98% · Source: Email snippet
 </p>
 <div class="mt-4 pt-3 border-t border-surface-container-high">
 <div class="w-full min-h-[36px] py-1.5 px-3 rounded-md border border-surface-container-high bg-white text-secondary font-body-sm text-xs font-medium flex items-center justify-center gap-1.5 cursor-default select-none">
-<span>Awaiting human confirmation</span>
+<span id="mock-awaiting">Awaiting human confirmation</span>
 </div>
 </div>
 </div>
 <div class="mt-3 p-2.5 rounded-md bg-white/60 border border-surface-container-high text-left">
-<span class="font-code-sm text-[11px] text-outline block">Reasoning log</span>
-<span class="font-code-sm text-xs text-secondary block mt-0.5">Non-resident status verified from passport residency header.</span>
+<span id="mock-reasoning-log" class="font-code-sm text-[11px] text-outline block">Reasoning log</span>
+<span id="mock-reasoning-text" class="font-code-sm text-xs text-secondary block mt-0.5">Non-resident status verified from passport residency header.</span>
 </div>
 </div>
 <div class="pt-3 border-t border-surface-container-high/60 mt-4">
-<span class="font-code-sm text-xs text-secondary block">Human in the loop: active</span>
+<span id="mock-human-loop" class="font-code-sm text-xs text-secondary block">Human in the loop: active</span>
 </div>
 </div>
 </div>
@@ -213,10 +219,10 @@
 <!-- SECTION 2: Problem -> Thesis -->
 <section class="w-full py-20 px-gutter-mobile lg:px-gutter bg-white">
 <div class="max-w-[760px] mx-auto text-center">
-<p class="font-body-md text-base text-secondary">
+<p id="problem-line" class="font-body-md text-base text-secondary">
   Government filing desks. University intranets. 15-year-old ERPs. No API, and never will be.
 </p>
-<h2 class="font-headline-lg text-3xl sm:text-4xl md:text-[44px] md:leading-[52px] text-on-surface font-bold tracking-tight mt-4">
+<h2 id="thesis-heading" class="font-headline-lg text-3xl sm:text-4xl md:text-[44px] md:leading-[52px] text-on-surface font-bold tracking-tight mt-4">
   When there is no API, <span class="text-primary">the browser is the API.</span>
 </h2>
 </div>
@@ -226,18 +232,18 @@
 <section class="w-full py-20 px-gutter-mobile lg:px-gutter bg-white" id="how-it-works">
 <div class="max-w-[860px] mx-auto">
 <div class="text-center">
-<h2 class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
+<h2 id="how-heading" class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
   A compact index, not the raw page.
 </h2>
-<p class="font-body-md text-base text-secondary mt-3 max-w-[540px] mx-auto">
+<p id="how-subheading" class="font-body-md text-base text-secondary mt-3 max-w-[540px] mx-auto">
   We never send the HTML to the model — we send a short list of the elements that matter.
 </p>
 </div>
 <div class="mt-16 flex flex-col md:flex-row items-start justify-between gap-8 relative">
 <div class="flex-1 w-full text-left">
 <span class="font-code-sm text-xs text-secondary block">01</span>
-<h3 class="font-headline-sm text-xl text-on-surface font-bold mt-1">Index</h3>
-<p class="font-body-sm text-sm text-secondary mt-2 leading-relaxed">
+<h3 id="step1-title" class="font-headline-sm text-xl text-on-surface font-bold mt-1">Index</h3>
+<p id="step1-desc" class="font-body-sm text-sm text-secondary mt-2 leading-relaxed">
   The page becomes a list of at most 150 elements, each with a stable reference.
 </p>
 </div>
@@ -248,8 +254,8 @@
 </div>
 <div class="flex-1 w-full text-left">
 <span class="font-code-sm text-xs text-secondary block">02</span>
-<h3 class="font-headline-sm text-xl text-on-surface font-bold mt-1">Reason</h3>
-<p class="font-body-sm text-sm text-secondary mt-2 leading-relaxed">
+<h3 id="step2-title" class="font-headline-sm text-xl text-on-surface font-bold mt-1">Reason</h3>
+<p id="step2-desc" class="font-body-sm text-sm text-secondary mt-2 leading-relaxed">
   The agent proposes a value for each field, citing its reasoning.
 </p>
 </div>
@@ -260,8 +266,8 @@
 </div>
 <div class="flex-1 w-full text-left">
 <span class="font-code-sm text-xs text-secondary block">03</span>
-<h3 class="font-headline-sm text-xl text-on-surface font-bold mt-1">Approve</h3>
-<p class="font-body-sm text-sm text-secondary mt-2 leading-relaxed">
+<h3 id="step3-title" class="font-headline-sm text-xl text-on-surface font-bold mt-1">Approve</h3>
+<p id="step3-desc" class="font-body-sm text-sm text-secondary mt-2 leading-relaxed">
   A person reviews and approves before anything is written.
 </p>
 </div>
@@ -273,40 +279,40 @@
 <section class="w-full py-20 px-gutter-mobile lg:px-gutter bg-white">
 <div class="max-w-[780px] mx-auto">
 <div class="text-center mb-12">
-<h2 class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
+<h2 id="what-heading" class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
   One agent, three flows.
 </h2>
 </div>
 <div class="w-full flex flex-col">
 <div class="border-t border-surface-container-high py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 sm:gap-8">
 <div class="sm:w-1/3 flex items-center gap-2.5 flex-shrink-0">
-<span class="font-headline-sm text-base font-semibold text-on-surface">Assisted form filling</span>
-<span class="font-code-sm text-xs px-2 py-0.5 rounded bg-primary-fixed text-primary font-medium">live</span>
+<span id="flow1-title" class="font-headline-sm text-base font-semibold text-on-surface">Assisted form filling</span>
+<span id="flow1-badge" class="font-code-sm text-xs px-2 py-0.5 rounded bg-primary-fixed text-primary font-medium">live</span>
 </div>
 <div class="sm:w-2/3">
-<p class="font-body-sm text-sm text-secondary leading-relaxed">
+<p id="flow1-desc" class="font-body-sm text-sm text-secondary leading-relaxed">
   Extracts data from a pasted email, maps it to the form on screen, proposes it field by field.
 </p>
 </div>
 </div>
 <div class="border-t border-surface-container-high py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 sm:gap-8">
 <div class="sm:w-1/3 flex items-center gap-2.5 flex-shrink-0">
-<span class="font-headline-sm text-base font-semibold text-on-surface">Table reading</span>
-<span class="font-code-sm text-xs text-secondary px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">later</span>
+<span id="flow2-title" class="font-headline-sm text-base font-semibold text-on-surface">Table reading</span>
+<span id="flow2-badge" class="font-code-sm text-xs text-secondary px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">later</span>
 </div>
 <div class="sm:w-2/3">
-<p class="font-body-sm text-sm text-secondary leading-relaxed">
+<p id="flow2-desc" class="font-body-sm text-sm text-secondary leading-relaxed">
   Answers questions about a case tray extracted from the page.
 </p>
 </div>
 </div>
 <div class="border-t border-b border-surface-container-high py-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 sm:gap-8">
 <div class="sm:w-1/3 flex items-center gap-2.5 flex-shrink-0">
-<span class="font-headline-sm text-base font-semibold text-on-surface">Pre-submission review</span>
-<span class="font-code-sm text-xs text-secondary px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">later</span>
+<span id="flow3-title" class="font-headline-sm text-base font-semibold text-on-surface">Pre-submission review</span>
+<span id="flow3-badge" class="font-code-sm text-xs text-secondary px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">later</span>
 </div>
 <div class="sm:w-2/3">
-<p class="font-body-sm text-sm text-secondary leading-relaxed">
+<p id="flow3-desc" class="font-body-sm text-sm text-secondary leading-relaxed">
   Flags empty fields and inconsistencies before the system rejects them.
 </p>
 </div>
@@ -318,10 +324,10 @@
 <!-- SECTION 5: Trust Principle -->
 <section class="w-full my-12 px-gutter-mobile lg:px-gutter" id="trust">
 <div class="max-w-[896px] mx-auto rounded-2xl bg-surface-container-low border border-surface-container-high py-16 px-8 text-center">
-<h2 class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
+<h2 id="trust-heading" class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
   The agent never submits.
 </h2>
-<p class="font-body-md text-base text-secondary max-w-xl mx-auto mt-4 leading-relaxed">
+<p id="trust-desc" class="font-body-md text-base text-secondary max-w-xl mx-auto mt-4 leading-relaxed">
   It reads, it proposes, it writes fields after approval — but a person presses submit. The submit tool isn't disabled. It isn't implemented.
 </p>
 </div>
@@ -330,25 +336,25 @@
 <!-- SECTION 6: Closing / Demo CTA -->
 <section class="w-full pt-12 pb-20 px-gutter-mobile lg:px-gutter bg-white text-center" id="demo">
 <div class="max-w-[640px] mx-auto">
-<h2 class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
+<h2 id="closing-heading" class="font-headline-lg text-2xl sm:text-3xl md:text-4xl text-on-surface font-bold tracking-tight">
   See it fill a real form.
 </h2>
 <div class="mt-6">
 <!-- TODO: point to the real demo video once recorded -->
-<a class="inline-flex items-center justify-center min-h-[44px] px-8 py-3.5 rounded-lg bg-primary text-white text-base font-semibold hover:bg-blue-700 transition-all active:scale-[0.98] shadow-sm" href="#demo">
+<a id="closing-cta" class="inline-flex items-center justify-center min-h-[44px] px-8 py-3.5 rounded-lg bg-primary text-white text-base font-semibold hover:bg-blue-700 transition-all active:scale-[0.98] shadow-sm" href="#demo">
   Watch the 2-minute demo
 </a>
 </div>
 </div>
 <div class="max-w-[672px] mx-auto border-t border-surface-container-high mt-16 pt-8 text-center">
-<p class="font-code-sm text-xs text-secondary tracking-tight">Wicket — built in 4h15 for Agents, Everywhere, AI Tinkerers Lima · Sept 12 2026</p>
+<p id="credit-line" class="font-code-sm text-xs text-secondary tracking-tight">Wicket — built in 4h15 for Agents, Everywhere, AI Tinkerers Lima · Sept 12 2026</p>
 <div class="mt-4 flex items-center justify-center gap-6">
 <a class="font-body-sm text-sm text-secondary hover:text-on-surface hover:underline transition-colors" href="https://github.com/Shine299/Agents-thinker" target="_blank" rel="noopener">GitHub</a>
 <span aria-hidden="true" class="text-surface-container-high select-none">·</span>
-<a class="font-body-sm text-sm text-secondary hover:text-on-surface hover:underline transition-colors" href="https://github.com/Shine299/Agents-thinker/blob/main/ARCHITECTURE.md" target="_blank" rel="noopener">Architecture</a>
+<a id="link-architecture" class="font-body-sm text-sm text-secondary hover:text-on-surface hover:underline transition-colors" href="https://github.com/Shine299/Agents-thinker/blob/main/ARCHITECTURE.md" target="_blank" rel="noopener">Architecture</a>
 <span aria-hidden="true" class="text-surface-container-high select-none">·</span>
 <!-- TODO: point to the real demo video once recorded -->
-<a class="font-body-sm text-sm text-secondary hover:text-on-surface hover:underline transition-colors" href="#demo">Demo video</a>
+<a id="link-demo-video" class="font-body-sm text-sm text-secondary hover:text-on-surface hover:underline transition-colors" href="#demo">Demo video</a>
 </div>
 </div>
 </section>
@@ -361,13 +367,147 @@
 <div class="max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter flex flex-col md:flex-row items-center justify-between gap-4">
 <div class="flex items-center gap-space-sm">
 <span class="font-headline-sm text-base font-bold tracking-tight text-on-surface">Wicket</span>
-<span class="font-code-sm text-xs text-on-surface-variant ml-2">Built for Agents, Everywhere · AI Tinkerers Lima, 2026</span>
+<span id="footer-credit" class="font-code-sm text-xs text-on-surface-variant ml-2">Built for Agents, Everywhere · AI Tinkerers Lima, 2026</span>
 </div>
 <div class="flex items-center gap-6">
 <a class="font-body-sm text-sm text-on-surface-variant hover:text-on-surface transition-colors" href="https://github.com/Shine299/Agents-thinker" target="_blank" rel="noopener">GitHub</a>
 </div>
 </div>
 </footer>
+
+<!-- Language toggle: vanilla JS, no dependencies. English is the source of truth in the
+     markup above (so the page is still correct if this script fails to load); Spanish
+     strings live here, the same way the real product keeps EN/ES out of hardcoded source. -->
+<script>
+(function () {
+  "use strict";
+  var STORAGE_KEY = "wicket-lang";
+
+  var translations = {
+    es: {
+      "nav-overview": "Resumen",
+      "nav-how": "Cómo funciona",
+      "nav-trust": "Confianza",
+      "nav-demo": "Demo",
+      "nav-watch": "Ver demo",
+      "hero-eyebrow-sub": "la ventanilla donde se resuelven los trámites",
+      "hero-title": "El agente que trabaja dentro de la pestaña que ya tenés abierta.",
+      "hero-subtitle": "Wicket lee y completa formularios de sistemas sin API — con una persona aprobando cada acción que modifica algo.",
+      "hero-cta": "Ver la demo",
+      "mock-status": "Listo",
+      "mock-dept": "Depto. de Rentas · Sistema 4A",
+      "mock-session": "Sesión N.° 882-K",
+      "mock-label-applicant": "ID del solicitante",
+      "mock-label-tax": "Impuesto",
+      "mock-proposed": "Propuesto",
+      "mock-label-case": "N.° de expediente",
+      "mock-label-region": "Región de trámite",
+      "mock-label-routing": "Código de ruta",
+      "mock-elements-mapped": "Elementos mapeados: 5/5",
+      "mock-submit-disabled": "Envío deshabilitado",
+      "mock-assistant-name": "Asistente Wicket",
+      "mock-step": "Paso 2 de 5",
+      "mock-field-suggestion": "Sugerencia de campo",
+      "mock-proposed-value": "Propuesto: Formulario 1040-NR",
+      "mock-confidence": "Confianza 98% · Fuente: fragmento de correo",
+      "mock-awaiting": "Esperando confirmación humana",
+      "mock-reasoning-log": "Registro de razonamiento",
+      "mock-reasoning-text": "Estado de no residente verificado con el encabezado de residencia del pasaporte.",
+      "mock-human-loop": "Humano en el circuito: activo",
+      "problem-line": "Mesas de partes de gobierno. Intranets universitarias. ERPs de hace 15 años. No tienen API, y nunca la tendrán.",
+      "thesis-heading": "Cuando no hay API, <span class=\"text-primary\">el navegador es la API.</span>",
+      "how-heading": "Un índice compacto, no la página completa.",
+      "how-subheading": "Nunca le enviamos el HTML al modelo — enviamos una lista corta de los elementos que importan.",
+      "step1-title": "Indexar",
+      "step1-desc": "La página se convierte en una lista de hasta 150 elementos, cada uno con una referencia estable.",
+      "step2-title": "Razonar",
+      "step2-desc": "El agente propone un valor para cada campo, citando su razonamiento.",
+      "step3-title": "Aprobar",
+      "step3-desc": "Una persona revisa y aprueba antes de escribir nada.",
+      "what-heading": "Un agente, tres flujos.",
+      "flow1-title": "Llenado asistido de formularios",
+      "flow1-badge": "activo",
+      "flow1-desc": "Extrae datos de un correo pegado, los mapea al formulario en pantalla y los propone campo por campo.",
+      "flow2-title": "Lectura de tablas",
+      "flow2-badge": "próximamente",
+      "flow2-desc": "Responde preguntas sobre una bandeja de casos extraída de la página.",
+      "flow3-title": "Revisión previa al envío",
+      "flow3-badge": "próximamente",
+      "flow3-desc": "Marca campos vacíos e inconsistencias antes de que el sistema los rechace.",
+      "trust-heading": "El agente nunca envía.",
+      "trust-desc": "Lee, propone y escribe campos después de la aprobación — pero una persona presiona enviar. La herramienta de envío no está deshabilitada. No está implementada.",
+      "closing-heading": "Mirá cómo completa un formulario real.",
+      "closing-cta": "Ver la demo de 2 minutos",
+      "credit-line": "Wicket — construido en 4h15 para Agents, Everywhere, AI Tinkerers Lima · 12 sept. 2026",
+      "link-architecture": "Arquitectura",
+      "link-demo-video": "Video demo",
+      "footer-credit": "Construido para Agents, Everywhere · AI Tinkerers Lima, 2026"
+    }
+  };
+
+  var titles = {
+    en: "Wicket — The Agent That Works Inside Your Tab",
+    es: "Wicket — El agente que trabaja dentro de tu pestaña"
+  };
+  var descriptions = {
+    en: "Wicket reads and fills legacy forms with no API — with a human approving every action that changes anything. Built for Agents, Everywhere, AI Tinkerers Lima.",
+    es: "Wicket lee y completa formularios de sistemas sin API — con una persona aprobando cada acción que modifica algo. Construido para Agents, Everywhere, AI Tinkerers Lima."
+  };
+
+  // Snapshot the original English markup once, so switching back to EN is exact
+  // and doesn't depend on re-fetching or duplicating strings above.
+  var englishSnapshot = {};
+  Object.keys(translations.es).forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) englishSnapshot[id] = el.innerHTML;
+  });
+
+  function applyLanguage(lang) {
+    var isEs = lang === "es";
+    var dict = isEs ? translations.es : englishSnapshot;
+
+    Object.keys(dict).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = dict[id];
+    });
+
+    document.documentElement.lang = isEs ? "es" : "en";
+    document.title = isEs ? titles.es : titles.en;
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute("content", isEs ? descriptions.es : descriptions.en);
+
+    var enBtn = document.getElementById("lang-en");
+    var esBtn = document.getElementById("lang-es");
+    [enBtn, esBtn].forEach(function (btn) {
+      if (!btn) return;
+      btn.classList.remove("bg-primary", "text-white", "text-secondary");
+      btn.classList.add("text-secondary");
+    });
+    var activeBtn = isEs ? esBtn : enBtn;
+    if (activeBtn) {
+      activeBtn.classList.remove("text-secondary");
+      activeBtn.classList.add("bg-primary", "text-white");
+    }
+    if (enBtn) enBtn.setAttribute("aria-pressed", String(!isEs));
+    if (esBtn) esBtn.setAttribute("aria-pressed", String(isEs));
+
+    try { localStorage.setItem(STORAGE_KEY, isEs ? "es" : "en"); } catch (e) { /* private mode: ignore */ }
+  }
+
+  var enBtn = document.getElementById("lang-en");
+  var esBtn = document.getElementById("lang-es");
+  if (enBtn) enBtn.addEventListener("click", function () { applyLanguage("en"); });
+  if (esBtn) esBtn.addEventListener("click", function () { applyLanguage("es"); });
+
+  var initial = "en";
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === "en" || saved === "es") initial = saved;
+  } catch (e) { /* private mode: default to English */ }
+
+  if (initial === "es") applyLanguage("es");
+})();
+</script>
 
 </body>
 </html>
