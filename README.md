@@ -87,21 +87,25 @@ The backend runs locally. There is no deployment: in a one-day event, a public U
 
 ## What was built during the hackathon
 
-| Component | Type |
-| --- | --- |
-| DOM indexing, `labelFor` fallback chain, action execution | **Built during the event** |
-| The four tools, the system prompt, approval and retry logic | **Built during the event** |
-| The `/agent/turn` contract, the full side panel, the i18n layer, the cloned portal and the demo case | **Built during the event** |
-| OpenAI Agents SDK (agent loop and tool calling) | Permitted library, pre-existing |
-| MV3 manifest boilerplate | Standard Chrome pattern, pre-existing |
-| Exa API | Sponsor service, pre-existing |
+| Component | Type | Detail |
+| --- | --- | --- |
+| DOM indexing (`indexPage()`), `labelFor()` fallback chain, action execution | **Built during the event** | `extension/content.js` — new code exercising the MV3 template |
+| The three tools (`read_page`, `fill_field`, `verify_entity`), the system prompt, approval and retry logic | **Built during the event** | `backend/agent.py` / `tools.py` — business logic on top of the SDK's agent loop |
+| The `/agent/turn` contract, the full side panel, the i18n layer (`t()`, ~30 lines, no library), the cloned portal and the demo case | **Built during the event** | `docs/API_CONTRACTS.md`, `extension/panel.js`, `extension/i18n/`, `portal-demo/` |
+| OpenAI Agents SDK (agent loop and tool calling) | Permitted library, pre-existing | Provides the loop and tool-calling machinery only |
+| MV3 manifest boilerplate | Standard Chrome pattern, pre-existing | The service-worker bridge and indexing logic on top of it are new |
+| Exa API | Sponsor service, pre-existing | `verify_entity` wiring, prompt, and stub fallback are new |
+| Synthetic legacy portal instead of a real-site clone | Deliberate choice | Guarantees the exact `labelFor()` edge cases (no `<label for>`, cryptic `ctl00_cphMain_*` ids) instead of hoping to find them by luck |
 
 ## Known limitations
 
-*(Filled in at 14:30, at code freeze. Any bug found after that hour is documented here instead of being fixed — a project delivered at 70% scores; one at 95% never submitted scores zero.)*
-
-- [ ] …
-- [ ] …
+- **Only Flow 1 is implemented** (assisted form filling). Table reading and pre-submission review are out of scope for the event — see `MEMORY.md`.
+- **The 6 KB index cap saturates before the 150-element cap.** Each element's JSON skeleton is ~95 bytes, so the index tops out around ~59 elements in practice, not 150. Irrelevant for the 12-field demo portal; a real legacy portal with 200+ fields would lose most of them. The frozen contract shape was not renegotiated mid-build — the cheap fix (drop null/false keys when serializing) is documented as a follow-up, not applied.
+- **Turn timeout is 20 seconds** (raised from the originally frozen 8s after measuring the real model: a 10-field turn takes 6–11s with `gpt-4o-mini`). This is the one post-freeze change to the contract, and it only changed the number, not the response shape.
+- **The demo case uses a fictitious RUC on purpose.** `verify_entity` (Exa, live) returns a different real company for that RUC. The agent does not block on the mismatch — it proposes the value from the message and states the discrepancy in the field's `reason`, so the human decides. This is by design, not a bug: the agent verifies, informs, and never overrides the person.
+- **Session state is in-memory**, keyed by `session_id`; it is lost on backend restart. No persistent database — out of scope for a same-day demo.
+- **One retry per action** on `ref_not_found`, never more — by design (see `AGENTS.md` rule 6), not a limitation to fix.
+- **Verified against `gpt-4o-mini`.** Reasoning models (the SDK's default) exceed the 20s timeout; `VENTANA_MODEL` overrides the default if a different model is needed.
 
 ## Methodology
 

@@ -8,9 +8,10 @@ Retrospectiva continua del proyecto Ventana. Se actualiza en vivo, con hora, por
 | --- | --- | --- | --- |
 | **Sprint-01** — scaffolding, contrato, mocks | **COMPLETADO** | APROBADO (pasada 2, tras auditoría) | `.sprints/SPEC-01.md` — 6/6 pytest + 10/10 banco de `content.js` en la primera auditoría; corregido a 26 tests / 13 checks en la segunda |
 | **Sprint-02** — llenado real, aprobación, reintento, Exa | **CERRADO** | APROBADO (pasada 3, con claves reales) | `.sprints/SPEC-02.md` — 46/46 pytest + 20/20 banco de `content.js` + 15/15 banco de `panel.js` + 6/6 E2E por HTTP con OpenAI y Exa reales |
+| **Sprint-03** — integración real, prompt afinado, E2E bilingüe | **En progreso** | 4 de 6 filas Done por HTTP (`.sprints/SPEC-03.md`); falta la corrida desde el panel en Chrome real y el primer corte de video | `.sprints/SPEC-03.md`, `docs/GUION_VIDEO.md` (corrida guionizada añadida), `README.md` (limitaciones + elegibilidad completadas) |
 | **Punto de Decisión 1** (12:30) | **Verde** | Extensión cargada y probada en Chrome real | Ver fila de la tabla de abajo |
 
-**Claves de OpenAI y Exa ya activas** (`backend/.env`, 2026-09-12). El flujo corre con modelo real por defecto. Ver [`docs/PENDIENTES.md`](docs/PENDIENTES.md) para operar las claves y el modelo. **Único pendiente humano de Sprint-02:** grabación de pantalla parcial en Chrome.
+**Claves de OpenAI y Exa ya activas** (`backend/.env`, 2026-09-12). El flujo corre con modelo real por defecto. Ver [`docs/PENDIENTES.md`](docs/PENDIENTES.md) para operar las claves y el modelo. **Pendiente humano, ahora unificado:** una sola sesión en Chrome real (extensión + backend + portal, los tres ya arriba en `:8000`/`:5500`) cubre a la vez la grabación de pantalla de Sprint-02 y la corrida E2E ×3 de Sprint-03 — ver bloque B del plan de ejecución.
 
 ## Estado del sistema (actualizar en cada cierre de tarea)
 

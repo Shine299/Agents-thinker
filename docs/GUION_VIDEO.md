@@ -39,11 +39,28 @@
 - Mostrar una corrida real sobre el portal clonado, no capturas ni resultados precargados.
 - No exceder los 2 minutos. Si sobra contenido, se recorta la sección de arquitectura (1:35–1:50), nunca la demo.
 
+## Corrida guionizada para grabar (Sprint-03, con claves reales)
+
+Entorno: backend en `:8000` (claves reales activas), portal en `:5500/mesa-partes.html`, extensión cargada.
+
+| Tiempo del guion | Acción exacta | Qué debe verse |
+| --- | --- | --- |
+| 0:00–0:15 | Mostrar `mesa-partes.html` cargado, sin el panel abierto | El portal feo (tablas anidadas, sin estilos modernos) |
+| 0:15–0:30 | Abrir el side panel sobre la misma pestaña. Decir la frase de Innovación | Panel "Connected" sobre la pestaña ya autenticada |
+| 0:30–1:15 | Pegar el correo de `portal-demo/demo-case.txt` (solo el cuerpo del correo, sin las notas internas). Enviar. Esperar la respuesta (6–11s reales) | El plan de 10 acciones con su `reason` cada una — señalar la fila del RUC: el `reason` dice que la verificación externa (Exa) encontró otra empresa para ese RUC, y aun así se propone el valor del correo |
+| 1:15–1:35 | Antes de aprobar el primer campo, pulsar F5 en la pestaña del portal (se pierden los `data-ventana-ref`). Aprobar ese campo → aparece `ref_not_found` → el log muestra el paso `retry` → nueva propuesta con ref fresco → aprobar de nuevo, el campo se llena y se pone verde. Decir la frase de control de usuario. Aprobar el resto y pulsar tú el botón "Enviar Solicitud" | El reintento visible en el log; el cursor humano sobre el botón de envío |
+| 1:35–1:45 | Cambiar ES→EN en la cabecera a mitad de sesión, mandar un mensaje corto nuevo | El historial intacto, la respuesta siguiente en inglés. Decir la frase bilingüe |
+| 1:45–1:50 | Diagrama estático de `ARCHITECTURE.md` | — |
+| 1:50–2:00 | Cierre, elegibilidad, logos de partners | — |
+
+**Momento vendible nuevo (verificado hoy con Exa real):** el `reason` del campo RUC mostrando la discrepancia es la prueba en vivo de que el agente verifica contra una fuente externa y nunca decide por el humano — enlaza directo con la frase de control de usuario.
+
 ## Checklist antes de exportar
 
 - [ ] Dura 2 minutos o menos
 - [ ] Se ve una corrida end-to-end real del Flujo 1, con entrada nueva
 - [ ] Se ve el reintento tras `ref_not_found` en el log
+- [ ] Se ve la verificación externa (Exa) en el `reason` de un campo, con su posible discrepancia
 - [ ] Se ve que el humano pulsa el botón de envío, no el agente
 - [ ] Se dijo la frase de Innovación literalmente
 - [ ] Se mostró el cambio de idioma ES → EN en vivo, sin perder la sesión
